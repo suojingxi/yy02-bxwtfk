@@ -44,6 +44,11 @@ public class IndexController {
 			HttpServletRequest request) throws Exception {
 		Logger logger = Logger.getLogger(IndexController.class);
 		try {
+			//这里通过调用GetAuth类中的方法，获取当前登录人的信息
+			
+			//通过判断当前登录人是不是管理员（这里管理员写死），如果是，则获取当前登录人所在组织的所有人员。
+			
+			
 			ObjectsDetail user = new ObjectsDetail();
 			user.setDept("1");
 			user.setEmail("1");
