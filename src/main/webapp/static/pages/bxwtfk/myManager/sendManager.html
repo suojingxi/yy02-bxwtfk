@@ -1,0 +1,19 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<div>
+	<div>当前位置：发布管理</div>
+	<div style="width:400px;float:left;" data-bind="foreach: data.content">
+		<div>
+			<input type="hidden" data-bind="value: id"/>
+			姓名：<span data-bind="text: username"></span>
+			部门：<span data-bind="text: dept"></span>
+			手机号：<span data-bind="text: phone"></span>
+			邮箱：<span data-bind="text: email"></span>
+			<a href="#" data-bind="click: addUser">+</a>
+		</div>
+	</div>
+	<div style="float:right;" id="aa">
+		
+	</div>
+</div>

@@ -1,0 +1,19 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<div>
+	<div>当前位置：我的消息</div>
+	<!-- <div>
+		<input type="text" id="test1" />
+		<input type="submit" value="提交" data-bind="click:search"/><br/>
+		<span data-bind="text: data.content"></span>
+	</div> -->
+	<div data-bind="foreach: data.content">
+		<div>
+			时间：<span data-bind="text: send_time"></span>
+			主题：<span data-bind="text: content_themes"></span>
+			是否已读：<span data-bind="text: state"></span>
+			信息内容：<span data-bind="text: content"></span>
+		</div>
+	</div>
+</div>
