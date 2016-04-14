@@ -1,16 +1,20 @@
 define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.html', 'mvvc','jquery.custom'], function($, ko, template) {
 
 	var pageUrl = '/bxwtfk/myManager/sendManager';
+	var pageUrl1 = '/bxwtfk/myManager/getAllUser';
 	
 	var viewModel = {
 			data : {
-				content : ko.observableArray([])
+				content : ko.observableArray([]),
+				allUser : ko.observableArray([])
 			},
 			searchText : ko.observable(""),
 			setData : function(data) {
-				this.data.content(data.USERINFO); 
+				this.data.content(data.USERINFO);
+				this.data.allUser(data.ALLUSERINFO);
 			},
-			pageUrl : pageUrl
+			pageUrl : pageUrl,
+			pageUrl1 : pageUrl1
 	};
 	
 	viewModel.load = function(){
@@ -20,6 +24,24 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 			type : 'GET',
 			cache : false,
 			url : $ctx + this.pageUrl,
+			data : {},
+			dataType : 'json',
+			success : function(obj) {
+				me.setData(obj);
+			},
+			error : function(obj){
+				alert("obj error");
+			}
+		});
+	}
+	
+	viewModel.loadAll = function(){
+		var me = this;
+		
+		$.ajax({
+			type : 'POST',
+			cache : false,
+			url : $ctx + this.pageUrl1,
 			data : {},
 			dataType : 'json',
 			success : function(obj) {

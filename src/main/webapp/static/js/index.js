@@ -30,24 +30,16 @@ require([ 'jquery', 'knockout', 'ujs', 'director','error' ], function($, ko) {
 			async : false,
 			success : function(data) {
 				$('.sub-menu').find("a[href*='#']").each(
-						function() {
-							var url = $(this).attr("href");
-							var li = $(this).parent();
-							$.each(data, function(i, item) {
-								if (url == ("#" + item.url)) {
-									if (li.parent().is("dt")) {
-										li.parent().css("display", "block");
-									} else if (li.parent().parent().prev("dt")
-											.is("dt")) {
-										li.css("display", "block");
-										li.parent().parent().prev("dt").css(
-												"display", "block");
-									}
-								}
+					function() {
+						var url = $(this).attr("href");
+						var li = $(this).parent();
+						$.each(data, function(i, item) {
+							if (url == ("#" + item.url)) {
+								li.css("display", "block");
 							}
-							);
-						 }
-						);
+						});
+					}
+				);
 			},
 			error : function(req, textStatus, errorThrown) {
 				if (req.responseJSON) {

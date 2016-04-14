@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @ClassName: ObjectsDetail
  * @Description: 
  * @author sjx
- * @date 2016年04月03日 早晨17:21:19
+ * @date 2016年04月03日 早晨05:21:19
  */
 public class ObjectsDetail implements Serializable{
 
@@ -15,12 +15,12 @@ public class ObjectsDetail implements Serializable{
 	private String user_uid;
 	private String user_name;
 	private String user_passw;
-	private String dept;
+	private String deptname;
 	private String position;
-	private String phone;
+	private String mobile;
 	private String email;
+	private String isadmin;
 	private String statu;
-	
 	public String getUser_uid() {
 		return user_uid;
 	}
@@ -39,11 +39,11 @@ public class ObjectsDetail implements Serializable{
 	public void setUser_passw(String user_passw) {
 		this.user_passw = user_passw;
 	}
-	public String getDept() {
-		return dept;
+	public String getDeptname() {
+		return deptname;
 	}
-	public void setDept(String dept) {
-		this.dept = dept;
+	public void setDeptname(String deptname) {
+		this.deptname = deptname;
 	}
 	public String getPosition() {
 		return position;
@@ -51,17 +51,23 @@ public class ObjectsDetail implements Serializable{
 	public void setPosition(String position) {
 		this.position = position;
 	}
-	public String getPhone() {
-		return phone;
+	public String getMobile() {
+		return mobile;
 	}
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getIsadmin() {
+		return isadmin;
+	}
+	public void setIsadmin(String isadmin) {
+		this.isadmin = isadmin;
 	}
 	public String getStatu() {
 		return statu;

@@ -1,19 +1,111 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-<div>
-	<div>当前位置：发布管理</div>
-	<div style="width:400px;float:left;" data-bind="foreach: data.content">
-		<div>
-			<input type="hidden" data-bind="value: id"/>
-			姓名：<span data-bind="text: username"></span>
-			部门：<span data-bind="text: dept"></span>
-			手机号：<span data-bind="text: phone"></span>
-			邮箱：<span data-bind="text: email"></span>
-			<a href="#" data-bind="click: addUser">+</a>
+<div style="position:relative; top:-40px; display:none;" id="divgl">
+	<table border="0" width="100%">
+		<tr>
+ 			<td width="232" valign="top">
+ 				<div>
+     				<div><img src="images/t_1.gif"></div>
+     				<div class="list">
+       					<div class="tw_searchBox ">
+         					<input type="text" />
+       					</div>
+       					<ul class="tw_rightTeamBar">
+         						<li id="userid1">
+         							<a href="#">
+            						<p id="id1name">付 人力资源部</p>
+            						<p class="graycolor" id="id1email">ucy@yonyou.com</p>
+           						</a>
+           						<div id="id1" class="add" onclick="addUser(this)"> 
+      							<img src="${ctx}/static/images/add.gif" /> 
+      						</div>
+    						</li>
+    						<li id="userid2"> 
+    							<a href="#">
+             <p id="id2name">付春 人力资源部</p>
+             <p class="graycolor" id="id2email">ucy@yonyou.com</p>
+            </a>
+      						<div id="id2"  class="add" onclick="addUser(this)"> 
+      							<img src="${ctx}/static/images/add.gif" /> 
+      						</div>
+    						</li>
+    						<li id="userid3"> 
+    							<a href="#">
+             <p id="id3name">付春燕 人力资源部</p>
+             <p class="graycolor" id="id3email">ucy@yonyou.com</p>
+            </a>
+      						<div id="id3" class="add" onclick="addUser(this)"> 
+      							<img src="${ctx}/static/images/add.gif" /> 
+      						</div>
+    						</li>
+    						<li id="userid4"> 
+    							<a href="#">
+             <p id="id4name">付春21 人力资源部</p>
+             <p class="graycolor" id="id4email">ucy@yonyou.com</p>
+            </a>
+            <div id="id4" class="add" onclick="addUser(this)"> 
+            	<img src="${ctx}/static/images/add.gif" /> 
+            </div>
+    						</li>
+  					</ul>
+					</div>
 		</div>
+	</td>
+<td valign="top"><div class="r_list">
+ 	<div><img src="images/t_2.gif"></div>
+   	<div>
+  				<table border="0" style="border-collapse: collapse;" width="100%">
+  					<tr style="background-color: #f5f5f5; text-align: center;">
+           <td width="30%">姓名 部门</td>
+           <td width="50%">邮箱</td>
+           <td width="20%">操作</td>
+    					</tr>
+  				</table>
+				</div>
+				<div class="table_1">
+  				<table id="table_1" border="0" style="border-collapse: collapse;" width="100%" >
+          <tr>
+         	<td>feiyu 人力资源部</td>
+           <td>fucy@yonyou.com</td>
+           <td><a onclick="javascript:removetr(this)" id="rmid1" >
+           	<img src="${ctx}/static/images/pllus.gif" /></a>
+           </td>
+          </tr>
+  				</table>
+				</div>
 	</div>
-	<div style="float:right;" id="aa">
-		
-	</div>
+	<div class="r_list_2">
+  		<ul>
+    		<li class="current_1" id="mod_2_1" onClick="javascript:showmod(this)"> 一种问题类型单据 </li>
+    		<li id="mod_2_2" onClick="javascript:showmod(this)"> 多种问题类型单据 </li>
+  		</ul>
+  		<div class="mod_2" id="divmod_2_1">
+    		<div>
+       <select>
+       </select>
+    		</div>
+    		<div class="mod_3">
+      			<div class="mod_3_t"> 显示选择的内容1（内容为更新方式） </div>
+      			<div class="mod_3_c">
+        			<textarea class="area_1"></textarea>
+      			</div>
+    		</div>
+  		</div>
+				<div class="mod_2" style="display:none;" id="divmod_2_2">
+           				<div>
+             					<select>
+             					</select>
+           				</div>
+           				<div class="mod_3">
+             					<div class="mod_3_t"> 显示选择的内容2（内容为更新方式） </div>
+             					<div class="mod_3_c">
+               					<textarea class="area_1"></textarea>
+             					</div>
+           				</div>
+         				</div>
+       			</div>
+       		</td>
+   		</tr>
+ 		</table>
 </div>

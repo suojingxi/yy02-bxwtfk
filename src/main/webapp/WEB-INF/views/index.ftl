@@ -19,56 +19,27 @@
 		</script>
 	</head>
 	<body>
-	<div class="main">
-    <table width="100%" border="0">
-      <tr>
-        <td width="162" valign="top">
-        	<div class="left">
-    	<ul>
-        	<li class="current">我的信息（13）<i>11</i></li>
-            <li>管理</li>
-        </ul>
-    </div>
-        </td>
-        <td valign="top">
-        	<div class="right">
-                <div class="mod_1">
-                    <div class="del"><img src="${ctx}/static/images/del.gif" /></div>
-                    <div class="title">2016年用友政务人力资源部分工及接口</div>
-                    <div class="time">04-06  16:00</div>
-                    <div>
-        各位好：附件是2016年用友政务人力资源部分工及接口情况，2016年用友政务人力资源部分工及接口情况，2016年
-用友政务人力资源部分工及接口情况。</div>
-                </div>
-                <div class="mod_1">
-                    <div class="del"><img src="${ctx}/static/images/del.gif" /></div>
-                    <div class="title">2016年用友政务人力资源部分工及接口</div>
-                    <div class="time">04-06  16:00</div>
-                    <div>
-        各位好：附件是2016年用友政务人力资源部分工及接口情况，2016年用友政务人力资源部分工及接口情况，2016年
-用友政务人力资源部分工及接口情况。</div>
-                </div>
-                <div class="mod_1">
-                    <div class="del"><img src="${ctx}/static/images/del.gif" /></div>
-                    <div class="title">2016年用友政务人力资源部分工及接口</div>
-                    <div class="time">04-06  16:00</div>
-                    <div>
-        各位好：附件是2016年用友政务人力资源部分工及接口情况，2016年用友政务人力资源部分工及接口情况，2016年
-用友政务人力资源部分工及接口情况。</div>
-                </div>
-                <div class="mod_1">
-                    <div class="del"><img src="${ctx}/static/images/del.gif" /></div>
-                    <div class="title">2016年用友政务人力资源部分工及接口</div>
-                    <div class="time">04-06  16:00</div>
-                    <div>
-        各位好：附件是2016年用友政务人力资源部分工及接口情况，2016年用友政务人力资源部分工及接口情况，2016年
-用友政务人力资源部分工及接口情况。</div>
-                </div>
-            </div>
-        </td>
-      </tr>
-    </table>
-</div>
+		<div class="main">
+			<div class="left">
+			    <ul class="sub-menu">
+			      <li style="display:none;" class="current" id="wdxx" onclick="javascript:show(this)"><a href="#/bxwtfk/myInfo/personInfo">我的信息（13）<i>11</i></a></li>
+			      <li style="display:none;" id="gl" onClick="javascript:show(this)"><a href="#/bxwtfk/myManager/sendManager">管理</a></li>
+			    </ul>
+			</div>
+			<div class="content"></div>
+		</div>
+		<script type="text/javascript">
+			function show(e){
+				var temp=e.id;
+				if(temp=="wdxx"){
+				    $("#wdxx").removeClass().addClass("current");
+				    $("#gl").removeClass();
+			    }else{
+				    $("#gl").removeClass().addClass("current");
+				    $("#wdxx").removeClass();
+		    	}
+			}
+		</script>
 		
 		<script src="${ctx}/static/lib/requirejs/require.debug.js"></script>
 		<script src="${ctx}/static/js/config.js"></script>

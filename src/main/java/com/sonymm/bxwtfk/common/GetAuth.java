@@ -9,9 +9,11 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 
+@Service
 public class GetAuth {
 
 	/*
@@ -37,36 +39,58 @@ public class GetAuth {
 	private  static  String appSecret ="oncihv";
 	private  static  String clientId ="ed6335f5-061f-43dd-af30-db23904466ee";
 	private  static  String clientSecret ="oncihv";
-	private  static  String auth_username ="isvtest";
-	private  static  String password = "3b35313cc6036f8789e3aa0769cab4b9";
+	private  static  String auth_username ="xuejx@yonyou.com";
+	private  static  String password = "482c811da5d5b4bc6d497ffa98491e38";
 
-	public static void main(String[] args) throws Exception {
-		String access_token = testAuthentication(getAuthCode());
-		Map<String, Object> authMap = getCode(access_token);
-		access_token = codeForAccessTokenForClient(authMap);
+//	public static void main(String[] args) throws Exception {
+//		String access_token = testAuthentication(getAuthCode());
+//		Map<String, Object> authMap = getCode(access_token);
+//		access_token = codeForAccessTokenForClient(authMap);
 //		getUserInfo(appkey,access_token);
 //		getUserInfo2(appkey,access_token);
 //		getOrgInfo(appkey,access_token);
-		getAuths(appkey,access_token);
+//		getAuths(appkey,access_token);
+//		getCompanyUserInfo(appkey,access_token);
+//	}
+	
+	//分页获取当前登录人所在企业的所有员工信息
+	public String getAllAuth() throws Exception {
+		String auth = "";
+		String access_token = testAuthentication(getAuthCode());
+		Map<String, Object> authMap = getCode(access_token);
+		access_token = codeForAccessTokenForClient(authMap);
+		auth = getCompanyUserInfo(appkey,access_token);
+		return auth;
 	}
+	
+	//获取当前登录人的员工信息
+	public String getAuth() throws Exception {
+		String auth = "";
+		String access_token = testAuthentication(getAuthCode());
+		Map<String, Object> authMap = getCode(access_token);
+		access_token = codeForAccessTokenForClient(authMap);
+		auth = getUserInfo(appkey,access_token);
+		return auth;
+	}
+	
 	//第一步：获取auth_code
-	public static String getAuthCode() throws HttpException, IOException{
+	public String getAuthCode() throws HttpException, IOException{
 		HttpClient httpClient = new HttpClient();
 		String url ="http://cia.inte.chanapp.com/internal_api/authorizeByJsonp?callback=callback&client_id="+clientId+"&state=xxsss";
 		GetMethod method = new GetMethod(url);
 		method.setFollowRedirects(true);
 		httpClient.executeMethod(method);
 		String result = method.getResponseBodyAsString();
-		System.out.println("1:getAuthCode:    "+result);
+//		System.out.println("1:getAuthCode:    "+result);
 		//System.out.println("1:  "+result.substring(result.indexOf("(")+1,result.indexOf(")")));
 		String auth_code = JSONObject.parseObject(result.substring(result.indexOf("(")+1,result.indexOf(")"))).getString("auth_code");
-		System.out.println("1:  auth_code :" + auth_code);
+//		System.out.println("1:  auth_code :" + auth_code);
 		method.releaseConnection();
 		return auth_code;
 	}
 
 	//第二步，登录用户
-	private static String  testAuthentication(String authCode) throws Exception {
+	private String  testAuthentication(String authCode) throws Exception {
 		HttpClient httpClient = new HttpClient();
 		PostMethod postMethod = new PostMethod("http://cia.inte.chanapp.com/internal_api/authentication");
 		postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8"); 
@@ -78,26 +102,26 @@ public class GetAuth {
 		int rsCode = httpClient.executeMethod(postMethod);
 		String result = postMethod.getResponseBodyAsString();
 		String access_token = JSONObject.parseObject(result).getString("access_token");
-		System.out.println("2:  "+result);
-		System.out.println("2:  access_token=" + access_token);
+//		System.out.println("2:  "+result);
+//		System.out.println("2:  access_token=" + access_token);
 		return access_token;
 	}
 	//第三步通过accessToken获取授权码
-	public static Map<String, Object> getCode(String access_token) throws HttpException, IOException{
+	public Map<String, Object> getCode(String access_token) throws HttpException, IOException{
 		int rsCode  = 0;
 		HttpClient httpClient = new HttpClient();
 		GetMethod method = new GetMethod("http://cia.inte.chanapp.com/api/v1/authentication_code?client_id="+clientId+"&isSecure=1&access_token="+access_token);
 		method.setFollowRedirects(false);
 		rsCode = httpClient.executeMethod(method);
-		System.out.println("rsCode=" + rsCode);
+//		System.out.println("rsCode=" + rsCode);
 		String result = method.getResponseBodyAsString();
-		System.out.println("3:getAuthCode:    "+result);
+//		System.out.println("3:getAuthCode:    "+result);
 		Map<String, Object> resultmap = JSONObject.parseObject(result);
 		method.releaseConnection();
 		return resultmap;
 	}	
 	//第四客户端应用通过授权码换取accessToken
-	public static String codeForAccessTokenForClient(Map<String, Object> authMap) throws HttpException, IOException{
+	public String codeForAccessTokenForClient(Map<String, Object> authMap) throws HttpException, IOException{
 		HttpClient httpClient = new HttpClient();
 		PostMethod postMethod = new PostMethod("http://cia.inte.chanapp.com/internal_api/codeForAccessTokenForClient");
 		postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8"); 
@@ -108,11 +132,11 @@ public class GetAuth {
 		String authCodeRelRandomKey =(String) authMap.get("authCodeRelRandomKey");
 		postMethod.addParameter("authCodeRelRandomKey", authCodeRelRandomKey);
 		int rsCode = httpClient.executeMethod(postMethod);
-		System.out.println("rsCode=" + rsCode);
+//		System.out.println("rsCode=" + rsCode);
 		String result = postMethod.getResponseBodyAsString();
-		System.out.println(result);
+//		System.out.println(result);
 		String access_token = JSONObject.parseObject(result).getString("access_token");
-		System.out.println("access_token="+access_token);
+//		System.out.println("access_token="+access_token);
 		
 		return access_token;
 		
@@ -120,77 +144,77 @@ public class GetAuth {
 	}
 	
 	//获取用户信息
-	public static String getUserInfo(String appKey, String  access_token) throws HttpException, IOException{
+	public String getUserInfo(String appKey, String  access_token) throws HttpException, IOException{
 		HttpClient httpClient = new HttpClient();
 		String url = "http://cia.inte.chanapp.com/api/v1/user?appKey="+appKey+"&access_token="+access_token;
 		GetMethod method = new GetMethod(url);
 		method.setFollowRedirects(true);
 		httpClient.executeMethod(method);
 		String result = method.getResponseBodyAsString();
-		System.out.println("userinfo="+result);
+//		System.out.println("userinfo="+result);
 		method.releaseConnection();
-		return "";
+		return result;
 	}
 	
 	//获取用户信息（带企业列表信息）
-	public static String getUserInfo2(String appKey, String  access_token) throws HttpException, IOException{
+	public String getUserInfo2(String appKey, String  access_token) throws HttpException, IOException{
 			HttpClient httpClient = new HttpClient();
 			String url = "http://cia.inte.chanapp.com/api/v1/user?appKey="+appKey+"&access_token="+access_token+"&needOrgLists=1";
 			GetMethod method = new GetMethod(url);
 			method.setFollowRedirects(true);
 			httpClient.executeMethod(method);
 			String result = method.getResponseBodyAsString();
-			System.out.println("userinfo="+result);
+//			System.out.println("userinfo="+result);
 			method.releaseConnection();
 			return "";
 		}
 	
 	//获取默认企业信息
-	public static String getOrgInfo(String appKey,String  access_token) throws HttpException, IOException{
+	public String getOrgInfo(String appKey,String  access_token) throws HttpException, IOException{
 		HttpClient httpClient = new HttpClient();
 		String url = "http://cia.inte.chanapp.com/api/v1/organization?appKey="+appKey+"&access_token="+access_token+"&orgType=1";
 		GetMethod method = new GetMethod(url);
 		method.setFollowRedirects(true);
 		httpClient.executeMethod(method);
 		String result = method.getResponseBodyAsString();
-		System.out.println("orginfo="+result);
+//		System.out.println("orginfo="+result);
 		method.releaseConnection();
 		return "";
 	}
 	//获取指定的企业信息 请将XXX换成orgId
-	public static String getOrgInfoById(String appKey,String  access_token) throws HttpException, IOException{
+	public String getOrgInfoById(String appKey,String  access_token) throws HttpException, IOException{
 		HttpClient httpClient = new HttpClient();
 		String url = "http://cia.inte.chanapp.com/api/v1/organization?appKey="+appKey+"&access_token="+access_token+"&orgType=1&orgId=XXX ";
 		GetMethod method = new GetMethod(url);
 		method.setFollowRedirects(true);
 		httpClient.executeMethod(method);
 		String result = method.getResponseBodyAsString();
-		System.out.println("orginfo="+result);
+//		System.out.println("orginfo="+result);
 		method.releaseConnection();
 		return "";
 	}
 	//切换企业，得到用户信息
-	public static String getCompanyUserInfo(String appKey, String  access_token) throws HttpException, IOException{
+	public String getCompanyUserInfo(String appKey, String  access_token) throws HttpException, IOException{
 		HttpClient httpClient = new HttpClient();
-		String url = "http://cia.chanapp.chanjet.com/api/v1/employee/findEmployeeAndDepartmentInfoByOrgIdOrDeptId?appKey="+appKey+"&access_token="+access_token+"&orgId=90004164972";
+		String url = "http://cia.inte.chanapp.com/api/v1/employee/findEmployeeAndDepartmentInfoByOrgIdOrDeptId?appKey="+appKey+"&access_token="+access_token+"&orgId=90000997922";
 		GetMethod method = new GetMethod(url);
 		method.setFollowRedirects(true);
 		httpClient.executeMethod(method);
 		String result = method.getResponseBodyAsString();
-		System.out.println("Companyuserinfo="+result);
+//		System.out.println("Companyuserinfo="+result);
 		method.releaseConnection();
 		return result;
 	}
 	
 	//获取员工信息
-	private static String  getAuths(String appKey,String  access_token) throws Exception {
+	private String  getAuths(String appKey,String  access_token) throws Exception {
 		HttpClient httpClient = new HttpClient();
-		String url = "http://cia.chanapp.chanjet.com/api/v1/employee/findEmployeeInfoByOrgIdAndKey?appKey="+appKey+"&access_token="+access_token+"&orgId=90005100910";//orgId=90004164972";
+		String url = "http://cia.inte.chanapp.com/api/v1/employee/findEmployeeInfoByOrgIdAndKey?appKey="+appKey+"&access_token="+access_token+"&orgId=90000997922";
 		GetMethod method = new GetMethod(url);
 		method.setFollowRedirects(true);
 		httpClient.executeMethod(method);
 		String result = method.getResponseBodyAsString();
-		System.out.println("Companyuserinfo="+result);
+//		System.out.println("Companyuserinfo="+result);
 		method.releaseConnection();
 		return result;
 	}

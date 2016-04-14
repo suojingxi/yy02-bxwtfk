@@ -4,11 +4,12 @@ img{ border:none}
 a{ color:#151515; text-decoration:none}
 a:hover{ color:#151515; text-decoration:underline;}
 a:active{ color:#151515; text-decoration:none}
-body{ font-family:"å¾®è½¯é›…é»‘"; font-size:14px; line-height:18px; color:#151515;}
+body{ font-family:"Î¢ÈíÑÅºÚ"; font-size:14px; line-height:18px; color:#151515;}
 
 table{ border-collapse:collapse; border:none;}
 
-.main{ margin:30px; border:solid 1px #d8d8d8; background:url(../images/bg.jpg) repeat-y;}
+/*.main{ margin:30px; border:solid 1px #d8d8d8; background:url(../images/bg.jpg) repeat-y;}*/
+.main{ margin:30px; border:solid 1px #d8d8d8; background:url(../images/bg.jpg) repeat-y; width:1300px; height:550px;}/*BM*/
 .clear{ clear:both;}
 .left{ float:left; width:162px; padding-top:20px;}
 .left li{ height:36px; line-height:36px; padding:0 15px; position:relative; color:#7f7f7f;}
@@ -16,10 +17,11 @@ table{ border-collapse:collapse; border:none;}
 .left .current{ background:url(../images/i_hover.jpg) no-repeat; color:#ffffff;}
 .left li a{ color:#7f7f7f;}
 .left .current a{ color:#ffffff;}
-.right{ padding:10px 30px;}
-.mod_1{ border:solid 1px #d8d8d8; padding:15px 25px; position:relative; margin-top:20px; line-height:24px;}
-.mod_1 .title{ font-size:16px; line-height:24px;}
-.mod_1 .time{ color:#b2b1b1;}
+/*.right{ padding:10px 30px;}*/
+.content{ position:relative;right:-170px; width:1100px;}/*BM20160412*/
+.mod_1{ border:solid 1px #d8d8d8; padding:15px 25px; position:relative; margin-top:20px; line-height:24px; width:1050px;}
+.mod_1 .title{ font-size:16px; line-height:24px; position:relative;}
+.mod_1 .time{ color:#b2b1b1; position:relative;}
 
 .del{ position:absolute; top:15px; right:25px;}
 
@@ -76,18 +78,3 @@ input[type="text"], input[type="password"] {
 .mod_3_t{ background-color: #f5f5f5; line-height: 35px; padding-left: 15px;}
 .mod_3_c{ padding: 10px;}
 .mod_3_c .area_1{ width: 100%; line-height: 24px; height: 70px;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
