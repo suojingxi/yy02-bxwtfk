@@ -3,7 +3,11 @@ require.config({
 	paths: {
 		text: "static/lib/requirejs/text",
 		css: "static/lib/requirejs/css",
-		jquery: "static/lib/jquery/jquery-1.11.2",
+		jquery: "static/lib/jquery/jquery-1.11.3",
+		timecontrol:"static/lib/timecontrol/jquery-1.7.1.min",
+		'jquery.custom':"static/lib/timecontrol/jquery-ui-1.8.18.custom.min",
+		'jquery.timepicker':"static/lib/timecontrol/jquery-ui-timepicker-addon",
+		'jquery.datepicker':"static/lib/timecontrol/jquery.ui.datepicker-zh-CN",
 		knockout: "static/lib/knockout/knockout-3.2.0.debug",
 		ujs: "static/lib/uui/js/u",
 		jqueryform: "static/lib/jquery-form/jquery.form",

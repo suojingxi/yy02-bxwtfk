@@ -42,9 +42,12 @@ public class BXWTFK_SENDCONTENT implements Serializable{
 	
 	@Column(name = "DELETE_TIME")
 	private String deleteTime;
+
+	@Column(name = "DU_STATU")
+	private String duStatu;
 	
 	@Column(name = "STATU")
-	private String state;
+	private String statu;
 	
 	public BXWTFK_SENDCONTENT(){
 		
@@ -105,12 +108,20 @@ public class BXWTFK_SENDCONTENT implements Serializable{
 	public void setDeleteTime(String deleteTime) {
 		this.deleteTime = deleteTime;
 	}
-
-	public String getState() {
-		return state;
+	
+	public String getDuState() {
+		return duStatu;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setDuState(String duState) {
+		this.duStatu = duState;
+	}
+
+	public String getStatu() {
+		return statu;
+	}
+
+	public void setStatu(String statu) {
+		this.statu = statu;
 	}
 }

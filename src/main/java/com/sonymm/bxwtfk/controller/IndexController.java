@@ -108,6 +108,7 @@ public class IndexController {
 				
 				session.setAttribute("loginUser", users[0]);
 				session.setAttribute("userName", users[0].getUser_name());
+				session.setAttribute("userId", auth_map.get(0).get("userId").toString());
 				
 				return "index";
 				

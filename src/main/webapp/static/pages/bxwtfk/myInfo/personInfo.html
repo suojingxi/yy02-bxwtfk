@@ -1,17 +1,67 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<div id="divwdxx" data-bind="foreach:data.content">
-	<div class="mod_1" id="divmumid1">
-  		<div class="del" >
-  			<a href="javascript:removexx(this)" id="mumid1" ><img src="./static/images/del.gif" /></a>
-  		</div>
-  		<div class="title"> 
-  			<p data-bind="text:contentThemes"></p>
-  		</div>
-  		<div class="time"> 
-  			<p data-bind="text:sendTime"></p>
-  		</div>
-  		<div>  
-  			<p data-bind="text:content"></p>
-  		</div>
-	</div>	
+<div id="divwdxx" class="myinfodiv row" style="margin-left:auto;margin-right:auto;" data-bind="foreach:data.content">
+	<div class="col-xs-4 col-md-3 mod_1">
+		<input type="hidden" data-bind="value:id">
+		<div class="del" >
+			<a href="javascript:;" data-bind='attr:{id:id}' onclick="delcfm(this);"><img src="./static/images/del.gif" /></a>
+		</div>
+		<div class="title">
+			<a href="javascript:;" data-bind='attr:{id:"title-"+id}' onclick="showmyInfo(this);"><p data-bind="text:contentThemes"></p></a>
+		</div>
+		<div class="time">
+			<p data-bind="text:sendTime"></p>
+		</div>
+		<div class="displayPart" displayLength="100">
+			<p data-bind="text:content.length>3?content.substr(0,3)+'...':content"></p>
+		</div>
+        <div class="myinfo" style="display:none;">
+        	<p data-bind="text:content"></p>
+        </div>
+	</div>
 </div>
+
+<!-- 信息删除确认 -->  
+<div class="modal fade" id="cfminfoModel">  
+	<div class="modal-dialog">  
+		<div class="modal-content message_align">  
+	  		<div class="modal-header">  
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>  
+				<h4 class="modal-title">提示信息</h4>  
+	  		</div>  
+	  		<div class="modal-body">  
+				<p id="cfminfo"></p>  
+	  		</div>  
+	  		<div class="modal-footer">  
+		 		<input type="hidden" id="url"/>  
+		 		<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>  
+		 		<a id="cfmfunction"  onclick="removexx(this);" class="btn btn-success" data-dismiss="modal">确定</a>  
+	  		</div>  
+		</div><!-- /.modal-content -->  
+  	</div><!-- /.modal-dialog -->  
+</div><!-- /.modal -->  
+
+	
+<!-- 详细信息 -->  
+<div class="modal fade" id="myRRIFSinfoModel">  
+	<div class="modal-dialog">  
+		<div class="modal-content message_align">  
+			<div class="modal-header">  
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>  
+				<h4 id="myRRIFStitle" class="modal-title"></h4>  
+			</div>  
+			<div class="modal-body">  
+				<p id="myRRIFSinfo"></p>  
+			</div>  
+			<div class="modal-footer">  
+				<input type="hidden" id="url"/>  
+				<p style="float:left" id="myRRIFStime" class="modal-title"></p>  
+			 	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>  
+			 	<a id="myRRIFSinfofunction"  onclick="" class="btn btn-success" data-dismiss="modal">删除</a>  
+		  	</div>  
+		</div><!-- /.modal-content -->  
+  	</div><!-- /.modal-dialog -->  
+</div><!-- /.modal --> 

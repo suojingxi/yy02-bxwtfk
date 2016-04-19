@@ -1,111 +1,258 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-<div style="position:relative; top:-40px; display:none;" id="divgl">
-	<table border="0" width="100%">
-		<tr>
- 			<td width="232" valign="top">
- 				<div>
-     				<div><img src="images/t_1.gif"></div>
-     				<div class="list">
-       					<div class="tw_searchBox ">
-         					<input type="text" />
-       					</div>
-       					<ul class="tw_rightTeamBar">
-         						<li id="userid1">
-         							<a href="#">
-            						<p id="id1name">付 人力资源部</p>
-            						<p class="graycolor" id="id1email">ucy@yonyou.com</p>
-           						</a>
-           						<div id="id1" class="add" onclick="addUser(this)"> 
-      							<img src="${ctx}/static/images/add.gif" /> 
-      						</div>
-    						</li>
-    						<li id="userid2"> 
-    							<a href="#">
-             <p id="id2name">付春 人力资源部</p>
-             <p class="graycolor" id="id2email">ucy@yonyou.com</p>
-            </a>
-      						<div id="id2"  class="add" onclick="addUser(this)"> 
-      							<img src="${ctx}/static/images/add.gif" /> 
-      						</div>
-    						</li>
-    						<li id="userid3"> 
-    							<a href="#">
-             <p id="id3name">付春燕 人力资源部</p>
-             <p class="graycolor" id="id3email">ucy@yonyou.com</p>
-            </a>
-      						<div id="id3" class="add" onclick="addUser(this)"> 
-      							<img src="${ctx}/static/images/add.gif" /> 
-      						</div>
-    						</li>
-    						<li id="userid4"> 
-    							<a href="#">
-             <p id="id4name">付春21 人力资源部</p>
-             <p class="graycolor" id="id4email">ucy@yonyou.com</p>
-            </a>
-            <div id="id4" class="add" onclick="addUser(this)"> 
-            	<img src="${ctx}/static/images/add.gif" /> 
-            </div>
-    						</li>
-  					</ul>
-					</div>
+<div id="divgl">
+	<div class="userinfoleft">
+		<div ><img style="width:270px" src="./static/images/t_1.gif"></div>
+		<div class="userinfoleft_top">
+			<div class="input-group" style="margin-top:10px;margin-left:10px;margin-right:20px;">
+				<span class="input-group-addon" id="basic-addon1" >
+					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+				</span>
+				<input type="text" class="form-control" placeholder="搜索" aria-describedby="basic-addon1">
+			</div>
 		</div>
-	</td>
-<td valign="top"><div class="r_list">
- 	<div><img src="images/t_2.gif"></div>
-   	<div>
-  				<table border="0" style="border-collapse: collapse;" width="100%">
-  					<tr style="background-color: #f5f5f5; text-align: center;">
-           <td width="30%">姓名 部门</td>
-           <td width="50%">邮箱</td>
-           <td width="20%">操作</td>
-    					</tr>
-  				</table>
-				</div>
-				<div class="table_1">
-  				<table id="table_1" border="0" style="border-collapse: collapse;" width="100%" >
-          <tr>
-         	<td>feiyu 人力资源部</td>
-           <td>fucy@yonyou.com</td>
-           <td><a onclick="javascript:removetr(this)" id="rmid1" >
-           	<img src="${ctx}/static/images/pllus.gif" /></a>
-           </td>
-          </tr>
-  				</table>
-				</div>
+		<div class="list">
+			<ul class="tw_rightTeamBar" data-bind="foreach: data.allUser">
+				<li style="border:solid 0px #d8d8d8;">
+					<div class="userinfolileft">
+						<input type="hidden" data-bind="value: userId" />
+						<input type="hidden" data-bind="value: position" />
+						<input type="hidden" data-bind="value: email" />
+						<p><span class="user_name" data-bind="text: name"></span>&nbsp;&nbsp;<span class="user_department" data-bind="text: deptName"></span></p>
+						<p class="user_mobile"><span data-bind="text: mobile"></span></p>
+					</div>
+					<div id="id1" class="add"><input type="image" src="./static/images/add.gif" data-bind="click:addUser" alt="添加"/></div>
+				</li>
+			</ul>
+		</div>
 	</div>
-	<div class="r_list_2">
-  		<ul>
-    		<li class="current_1" id="mod_2_1" onClick="javascript:showmod(this)"> 一种问题类型单据 </li>
-    		<li id="mod_2_2" onClick="javascript:showmod(this)"> 多种问题类型单据 </li>
-  		</ul>
-  		<div class="mod_2" id="divmod_2_1">
-    		<div>
-       <select>
-       </select>
-    		</div>
-    		<div class="mod_3">
-      			<div class="mod_3_t"> 显示选择的内容1（内容为更新方式） </div>
-      			<div class="mod_3_c">
-        			<textarea class="area_1"></textarea>
-      			</div>
-    		</div>
-  		</div>
-				<div class="mod_2" style="display:none;" id="divmod_2_2">
-           				<div>
-             					<select>
-             					</select>
-           				</div>
-           				<div class="mod_3">
-             					<div class="mod_3_t"> 显示选择的内容2（内容为更新方式） </div>
-             					<div class="mod_3_c">
-               					<textarea class="area_1"></textarea>
-             					</div>
-           				</div>
-         				</div>
-       			</div>
-       		</td>
-   		</tr>
- 		</table>
+	<div class="userinforight">
+		<div class="r_list">
+			<div width="100%"><img src="./static/images/t_2.gif"></div>
+			<div class="equal" style="background-color:#efefef;width:800px;">
+				<div class="table" >
+					<div class="one">姓名</div>
+					<div class="two">部门</div>
+					<div class="three">职位</div>
+					<div class="four">手机</div>
+					<div class="five">邮箱</div>
+					<div class="six">操作</div>
+				</div>
+			</div>
+			<div class="r_listdiv" ><div class="equal" id="table_1" style="width:800px;"></div></div>
+		</div>
+		<div class="r_list_2">
+			<ul class="ul_dou">
+				<li class="current_1" id="mod_2_1" onClick="javascript:showmod(this)"> 一种问题类型单据 </li>
+				<li id="mod_2_2" onClick="javascript:showmod(this)"> 多种问题类型单据 </li>
+			</ul>
+			<div class="mod_2">
+				<div class="dropdown">
+					<a id="dLabel" role="button" data-toggle="dropdown" aria-expanded="true" class="btn btn-info" data-target="#" href="javascript:;">
+						问题类型 <span class="caret"></span>
+					</a>
+					<!-- <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    					问题类型
+    					<span class="caret"></span>
+  					</button> -->
+					<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+						<li class="dropdown-submenu">
+							<a tabindex="-1" href="javascript:;">单据填写问题</a>
+							<ul class="dropdown-menu">
+								<li><a tabindex="-1"  id="A01" onclick="addproblem(this);">金额有误</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="A02" onclick="addproblem(this);">费用项目有误</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="A03" onclick="addproblem(this);">日期有误</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="A04" onclick="addproblem(this);">其他填写问题</a></li>
+							</ul>
+						</li>
+						<li class="dropdown-submenu">
+							<a tabindex="-1" href="javascript:;">单据审批问题</a>
+							<ul class="dropdown-menu">
+								<li><a tabindex="-1"  id="B01" onclick="addproblem(this);">超标未审</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="B02" onclick="addproblem(this);">大项目经理未审</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="B03" onclick="addproblem(this);">其他特殊事项未审</a></li>
+							</ul>
+						</li>
+						<li class="dropdown-submenu">
+							<a tabindex="-1" href="javascript:;">票据及粘贴问题</a>
+							<ul class="dropdown-menu">
+								<li><a tabindex="-1"  id="C01" onclick="addproblem(this);">未按要求顺序均匀粘贴</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="C02" onclick="addproblem(this);">票据不合规</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="C03" onclick="addproblem(this);">其他票据及粘贴问题</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>	
+				<div class="mod_3">
+					<div class="mod_3_t" id="problem">
+						<div style="width:100px;float:left;margin-top:5px;">已选择的问题：</div>
+					</div>
+					<div class="mod_3_c">
+						<textarea class="area_1" id="fbcontent"></textarea>
+					</div>
+				</div>
+				<div class="mod_4">
+					<button class="btn btn-info" onClick="submitRIFS()">提交</button>
+					<button class="btn btn-info" onClick="cfmremoveall()">清空</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+<div id="divgl">
+	<div class="userinfoleft">
+		<div style="width:100%"><img style="width:260px" src="./static/images/t_1.gif"></div>
+		<div class="list">
+			<div class="tw_searchBox "><input type="text" /></div>
+			<ul class="tw_rightTeamBar" data-bind="foreach: data.allUser">
+				<li id="userid1">
+					<div class="userinfolileft">
+						<input type="hidden" data-bind="value: userId" />
+						<input type="hidden" data-bind="value: position" />
+						<input type="hidden" data-bind="value: email" />
+						<p><span class="user_name" data-bind="text: name"></span>&nbsp;&nbsp;<span class="user_department" data-bind="text: deptName"></span></p>
+						<p class="user_mobile"><span data-bind="text: mobile"></span></p>
+					</div>
+					<div id="id1" class="add"><input type="image" src="./static/images/add.gif" data-bind="click:addUser" alt="添加"/></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="userinforight">
+		<div class="r_list">
+			<div width="100%"><img src="./static/images/t_2.gif"></div>
+			<div class="r_listdiv">
+				<div class="equal" id="table_1">
+					<div class="row" style="background-color:#efefef">
+						<div class="one">姓名</div>
+						<div class="two">部门</div>
+						<div class="three">职位</div>
+						<div class="four">手机</div>
+						<div class="five">邮箱</div>
+						<div class="six">操作</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="r_list_2">
+			<ul>
+				<li class="current_1" id="mod_2_1" onClick="javascript:showmod(this)"> 一种问题类型单据 </li>
+				<li id="mod_2_2" onClick="javascript:showmod(this)"> 多种问题类型单据 </li>
+		  	</ul>
+			<div class="mod_2" id="divmod_2_1">
+				<div class="dropdown">
+					<a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-info" data-target="#"
+					   href="javascript:;">
+						问题类型 <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+						<li class="dropdown-submenu">
+							<a tabindex="-1" href="javascript:;">单据填写问题</a>
+							<ul class="dropdown-menu">
+								<li><a tabindex="-1"  id="proid1" onclick="addproblem(this);">金额有误</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="proid2" onclick="addproblem(this);">费用项目有误</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="proid3" onclick="addproblem(this);">日期有误</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="proid4" onclick="addproblem(this);">其他填写问题</a></li>
+							</ul>
+						</li>
+						<li class="dropdown-submenu">
+							<a tabindex="-1" href="javascript:;">单据审批问题</a>
+							<ul class="dropdown-menu">
+								<li><a tabindex="-1"  id="proid5" onclick="addproblem(this);">超标未审</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="proid6" onclick="addproblem(this);">大项目经理未审</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="proid7" onclick="addproblem(this);">其他特殊事项未审</a></li>
+							</ul>
+						</li>
+						<li class="dropdown-submenu">
+							<a tabindex="-1" href="javascript:;">票据及粘贴问题</a>
+							<ul class="dropdown-menu">
+								<li><a tabindex="-1"  id="proid8" onclick="addproblem(this);">未按要求顺序均匀粘贴</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="proid9" onclick="addproblem(this);">票据不合规</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1"  id="proid10" onclick="addproblem(this);">其他票据及粘贴问题</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div class="mod_3">
+					<div class="mod_3_t" id="problem">
+						<div style="width:100px;float:left;margin-top:5px;">已选择的问题：</div>
+				  	</div>
+				    <div class="mod_3_c">
+						<textarea class="area_1"></textarea>
+				  	</div>
+				</div>
+				<div class="mod_4">
+					<button onClick="submitRIFS()">提交</button>
+					<button onClick="submitcancel()">清空</button>
+		  		</div>
+	  		</div>
+		</div>
+	</div>
+</div> -->

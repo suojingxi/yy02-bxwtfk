@@ -1,6 +1,9 @@
 package com.sonymm.bxwtfk.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,12 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sonymm.bxwtfk.bean.BXWTFK_SENDCONTENT;
-import com.sonymm.bxwtfk.bean.BXWTFK_USERINFO;
 import com.sonymm.bxwtfk.common.GetAuth;
+import com.sonymm.bxwtfk.service.ISendContentService;
 import com.sonymm.bxwtfk.util.ConvertJson;
+import com.sonymm.bxwtfk.util.UUIDUtil;
 
 /**
  * @ClassName: PersonInfoController
@@ -36,48 +40,8 @@ public class SendManagerController {
 	@Autowired
 	ConvertJson convertJson;
 	
-	@RequestMapping(value = "/myManager/sendManager", method = RequestMethod.GET)
-    public @ResponseBody Map<String, Object> sendManager(
-            ServletRequest request, HttpSession session) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<BXWTFK_USERINFO> lui = new ArrayList<BXWTFK_USERINFO>();
-		BXWTFK_USERINFO userInfo = new BXWTFK_USERINFO();
-		
-		userInfo.setDeptname("dept1");
-		userInfo.setEmail("email1");
-		userInfo.setIsadmin("1");
-		userInfo.setMobile("mobile1");
-		userInfo.setName("name1");
-		userInfo.setPosition("position1");
-		userInfo.setStatu("0");
-		userInfo.setUserid("1");
-		lui.add(userInfo);
-		
-		userInfo = new BXWTFK_USERINFO();
-		userInfo.setDeptname("dept2");
-		userInfo.setEmail("email2");
-		userInfo.setIsadmin("1");
-		userInfo.setMobile("mobile2");
-		userInfo.setName("name2");
-		userInfo.setPosition("position2");
-		userInfo.setStatu("0");
-		userInfo.setUserid("2");
-		lui.add(userInfo);
-		
-		userInfo = new BXWTFK_USERINFO();
-		userInfo.setDeptname("dept3");
-		userInfo.setEmail("email3");
-		userInfo.setIsadmin("1");
-		userInfo.setMobile("mobile3");
-		userInfo.setName("name3");
-		userInfo.setPosition("position3");
-		userInfo.setStatu("0");
-		userInfo.setUserid("3");
-		lui.add(userInfo);
-		
-		map.put("USERINFO", lui);
-		return map;
-	}
+	@Autowired
+	ISendContentService iSendContentService;
 	
 	@RequestMapping(value = "/myManager/getAllUser", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> getAllUser(
@@ -90,5 +54,39 @@ public class SendManagerController {
 		lui = convertJson.getListByJson(lmss.get("employeeInfo").toString());
 		map.put("ALLUSERINFO", lui);
 		return map;
+	}
+	
+	@RequestMapping(value = "/myManager/sendManager", method = RequestMethod.POST)
+    public @ResponseBody int sendManager(
+    		@RequestParam(value="ids") String ids,//传过来的是userId串
+    		@RequestParam(value="problems") String problems,
+    		@RequestParam(value="content") String content,
+            ServletRequest request, HttpSession session) throws Exception {
+		String userId = session.getAttribute("userId").toString();
+		List<Map<String, Object>> lmso = new ArrayList<Map<String,Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		//解析传过来的参数
+		String[] userIds = ids.split(",");
+		Date date=new Date();
+		DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		for(String id : userIds){
+			map.put("id", UUIDUtil.genUUID());
+			map.put("acceptUserinfoId", id);
+			map.put("sendUserinfoId", userId);
+			map.put("contentThemes", problems);
+			map.put("content", content);
+			map.put("sendTime", format.format(date));
+			map.put("deleteTime", "");
+			map.put("duStatu", "0");
+			map.put("statu", "0");
+			lmso.add(map);
+		}
+		//保存信息
+		int count = iSendContentService.insertContent(lmso);
+		if(count > 0){
+			//发送工作圈，如果发送失败，则重新发送，知道发送成功
+			
+		}
+		return count;
 	}
 }

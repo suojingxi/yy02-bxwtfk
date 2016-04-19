@@ -12,23 +12,16 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 			},
 			pageUrl : pageUrl
 	};
-	/*
-	viewModel.search = function() {
-		viewModel.load();                                                                                              
-	}
 	
 	viewModel.load = function(){
 		var me = this;
-		var test1=$.trim($('#test1').val());
 		
 		$.ajax({
-			type : 'GET',
+			type : 'POST',
 			cache : false,
 			url : $ctx + this.pageUrl,
-			data : {
-				test1:test1
-			},
-			//dataType : 'json',
+			data : {},
+			dataType : 'json',
 			success : function(obj) {
 				me.setData(obj);
 			},
@@ -37,19 +30,56 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 			}
 		});
 	}
-	*/
 	
-	viewModel.load = function(){
-		var me = this;
-		
+	this.delcfm = function(e){
+		removexxid=e.id;
+		$("#cfminfo").html("您确认要删除吗？");
+		$("#cfmfunction").attr("onclick","removexx("+removexxid+");");
+	    $('#cfminfoModel').modal();  
+	}
+	
+	this.showmyInfo = function(e){
+		var id = e.id.substr(6, e.id.length);
 		$.ajax({
 			type : 'GET',
 			cache : false,
-			url : $ctx + this.pageUrl,
-			data : {},
+			url : $ctx + "/bxwtfk/myInfo/personInfoById",
+			data : {
+				id : id
+			},
 			dataType : 'json',
 			success : function(obj) {
-				me.setData(obj);
+				$("#myRRIFStitle").html(obj.SENDCONTENT.contentThemes);
+				$("#myRRIFSinfo").html(obj.SENDCONTENT.content);
+				$("#myRRIFStime").html(obj.SENDCONTENT.sendTime);
+				$("#myRRIFSinfofunction").attr("onclick","removexx("+id+");");
+			    $('#myRRIFSinfoModel').modal(); 
+			},
+			error : function(obj){
+				alert("obj error");
+			}
+		});
+		
+	}
+	
+	//去后台交互删除
+	this.removexx = function(e){
+		var id = e;
+		$.ajax({
+			type : 'GET',
+			cache : false,
+			url : $ctx + "/bxwtfk/myInfo/delPersonById",
+			data : {
+				id : id
+			},
+			dataType : 'json',
+			success : function(obj) {
+				if(obj > 0){
+					//移除页面中元素
+				}else{
+					//删除失败
+					
+				}
 			},
 			error : function(obj){
 				alert("obj error");

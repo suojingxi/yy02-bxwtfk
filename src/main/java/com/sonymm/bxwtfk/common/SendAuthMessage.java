@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
-public class GetAuth {
+public class SendAuthMessage {
 
 	/*
 	 第一步，获取auth_code:  internal_api/authorizeByJsonp
@@ -24,17 +24,6 @@ public class GetAuth {
 	说明：如果用户是登录状态，则1和2 不需要操作,一般我们的应用场景是浏览器已经登录，1 和2 不需要。
 	由工作圈调用完第三步。把参数传递给第三方应用，至于传递方式双方商讨
 	 */
-	
-	/* 
-	appKey = 613e7490-2bf4-11e4-a896-ebae22e2bf15
-	appSecret = ud2ihp
-	clientId = isvDemo
-	clientSecret = kiow3e
-	 */
-	/*private  static  String appkey ="613e7490-2bf4-11e4-a896-ebae22e2bf15";
-	private  static  String appSecret ="ud2ihp";
-	private  static  String clientId ="isvDemo";
-	private  static  String clientSecret ="kiow3e";*/
 	private  static  String appkey ="ed6335f5-061f-43dd-af30-db23904466ee";
 	private  static  String appSecret ="oncihv";
 	private  static  String clientId ="ed6335f5-061f-43dd-af30-db23904466ee";
@@ -42,37 +31,6 @@ public class GetAuth {
 	private  static  String auth_username ="xuejx@yonyou.com";
 	private  static  String password = "482c811da5d5b4bc6d497ffa98491e38";
 
-//	public static void main(String[] args) throws Exception {
-//		String access_token = testAuthentication(getAuthCode());
-//		Map<String, Object> authMap = getCode(access_token);
-//		access_token = codeForAccessTokenForClient(authMap);
-//		getUserInfo(appkey,access_token);
-//		getUserInfo2(appkey,access_token);
-//		getOrgInfo(appkey,access_token);
-//		getAuths(appkey,access_token);
-//		getCompanyUserInfo(appkey,access_token);
-//	}
-	
-	//分页获取当前登录人所在企业的所有员工信息
-	public String getAllAuth() throws Exception {
-		String auth = "";
-		String access_token = testAuthentication(getAuthCode());
-		Map<String, Object> authMap = getCode(access_token);
-		access_token = codeForAccessTokenForClient(authMap);
-		auth = getCompanyUserInfo(appkey,access_token);
-		return auth;
-	}
-	
-	//获取当前登录人的员工信息
-	public String getAuth() throws Exception {
-		String auth = "";
-		String access_token = testAuthentication(getAuthCode());
-		Map<String, Object> authMap = getCode(access_token);
-		access_token = codeForAccessTokenForClient(authMap);
-		auth = getUserInfo(appkey,access_token);
-		return auth;
-	}
-	
 	//第一步：获取auth_code
 	public String getAuthCode() throws HttpException, IOException{
 		HttpClient httpClient = new HttpClient();
@@ -141,69 +99,6 @@ public class GetAuth {
 		return access_token;
 		
 
-	}
-	
-	//获取用户信息
-	public String getUserInfo(String appKey, String  access_token) throws HttpException, IOException{
-		HttpClient httpClient = new HttpClient();
-		String url = "http://cia.inte.chanapp.com/api/v1/user?appKey="+appKey+"&access_token="+access_token;
-		GetMethod method = new GetMethod(url);
-		method.setFollowRedirects(true);
-		httpClient.executeMethod(method);
-		String result = method.getResponseBodyAsString();
-//		System.out.println("userinfo="+result);
-		method.releaseConnection();
-		return result;
-	}
-	
-	//获取用户信息（带企业列表信息）
-	public String getUserInfo2(String appKey, String  access_token) throws HttpException, IOException{
-			HttpClient httpClient = new HttpClient();
-			String url = "http://cia.inte.chanapp.com/api/v1/user?appKey="+appKey+"&access_token="+access_token+"&needOrgLists=1";
-			GetMethod method = new GetMethod(url);
-			method.setFollowRedirects(true);
-			httpClient.executeMethod(method);
-			String result = method.getResponseBodyAsString();
-//			System.out.println("userinfo="+result);
-			method.releaseConnection();
-			return "";
-		}
-	
-	//获取默认企业信息
-	public String getOrgInfo(String appKey,String  access_token) throws HttpException, IOException{
-		HttpClient httpClient = new HttpClient();
-		String url = "http://cia.inte.chanapp.com/api/v1/organization?appKey="+appKey+"&access_token="+access_token+"&orgType=1";
-		GetMethod method = new GetMethod(url);
-		method.setFollowRedirects(true);
-		httpClient.executeMethod(method);
-		String result = method.getResponseBodyAsString();
-//		System.out.println("orginfo="+result);
-		method.releaseConnection();
-		return "";
-	}
-	//获取指定的企业信息 请将XXX换成orgId
-	public String getOrgInfoById(String appKey,String  access_token) throws HttpException, IOException{
-		HttpClient httpClient = new HttpClient();
-		String url = "http://cia.inte.chanapp.com/api/v1/organization?appKey="+appKey+"&access_token="+access_token+"&orgType=1&orgId=XXX ";
-		GetMethod method = new GetMethod(url);
-		method.setFollowRedirects(true);
-		httpClient.executeMethod(method);
-		String result = method.getResponseBodyAsString();
-//		System.out.println("orginfo="+result);
-		method.releaseConnection();
-		return "";
-	}
-	//切换企业，得到用户信息
-	public String getCompanyUserInfo(String appKey, String  access_token) throws HttpException, IOException{
-		HttpClient httpClient = new HttpClient();
-		String url = "http://cia.inte.chanapp.com/api/v1/employee/findEmployeeAndDepartmentInfoByOrgIdOrDeptId?appKey="+appKey+"&access_token="+access_token+"&orgId=90000997922&pageSize=2000";
-		GetMethod method = new GetMethod(url);
-		method.setFollowRedirects(true);
-		httpClient.executeMethod(method);
-		String result = method.getResponseBodyAsString();
-//		System.out.println("Companyuserinfo="+result);
-		method.releaseConnection();
-		return result;
 	}
 	
 	//获取员工信息

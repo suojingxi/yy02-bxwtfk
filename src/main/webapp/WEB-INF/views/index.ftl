@@ -4,43 +4,65 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 		<title>报销问题反馈系统</title>
 		<link href="${ctx}/static/css/style.css" rel="stylesheet" type="text/css" />
-		<script src="${ctx}/static/lib/jQueryAlert/jquery.js" type="text/javascript"></script>
-		<script src="${ctx}/static/lib/jQueryAlert/jquery.ui.draggable.js" type="text/javascript"></script>
-		<script src="${ctx}/static/lib/jQueryAlert/jquery.alerts.js" type="text/javascript"></script>
-		
-		<link href="${ctx}/static/lib/jQueryAlert/jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
-		
-		<link href="${ctx}/static/assets/css/jquery.ui.all.css" rel="stylesheet" type="text/css"/>
-		<link href="${ctx}/static/assets/css/demos.css" rel="stylesheet" type="text/css"/>
-		<link href="${ctx}/static/css/style.css" rel="stylesheet" type="text/css" />
-		
+		<script src="${ctx}/static/lib/jquery/jquery-1.11.3.js"></script>
+		<link rel="stylesheet" href="${ctx}/static/lib/bootstrap/css/bootstrap.min.css">
+		<script src="${ctx}/static/lib/bootstrap/js/bootstrap.min.js"></script>
+		<script src="${ctx}/static/lib/bootstrap/js/bootstrap-dropdown.js"></script>
 		<script>
 			window.$ctx = '${ctx}';
 		</script>
+		
 	</head>
 	<body>
 		<div class="main">
 			<div class="left">
-			    <ul class="sub-menu">
-			      <li style="display:none;" class="current" id="wdxx" onclick="javascript:show(this)"><a href="#/bxwtfk/myInfo/personInfo">我的信息（13）<i>11</i></a></li>
-			      <li style="display:none;" id="gl" onClick="javascript:show(this)"><a href="#/bxwtfk/myManager/sendManager">管理</a></li>
-			    </ul>
+				<ul class="sub-menu list-group" style="width:100%;" >
+					<li style="display:none;" class="active list-group-item" id="wdxx" onclick="javascript:show(this)"><span class="badge">14</span><a href="#/bxwtfk/myInfo/personInfo">我的信息</a></li>
+					<li style="display:none;" class="list-group-item"  id="gl" onclick="javascript:show(this)"><a href="#/bxwtfk/myManager/sendManager">管理</a></li>
+				</ul>
 			</div>
 			<div class="content"></div>
 		</div>
+		
+<!-- 错误消息提示 -->  
+<div class="modal fade" id="errorinfoModel">  
+	<div class="modal-dialog">  
+		<div class="modal-content message_align">  
+			<div class="modal-header">  
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>  
+				<h4 class="modal-title">错误提示</h4>  
+	 		</div>  
+	 		<div class="modal-body">  
+				<p id="errorinfo"></p>  
+	 		</div>  
+	 		<div class="modal-footer">  
+	 			<input type="hidden" id="url"/>  
+	 			<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>  
+	 		</div>  
+		</div><!-- /.modal-content -->  
+	</div><!-- /.modal-dialog -->  
+</div><!-- /.modal -->
+		
+		
+		
+		
+		
 		<script type="text/javascript">
 			function show(e){
 				var temp=e.id;
-				if(temp=="wdxx"){
-				    $("#wdxx").removeClass().addClass("current");
-				    $("#gl").removeClass();
-			    }else{
-				    $("#gl").removeClass().addClass("current");
-				    $("#wdxx").removeClass();
-		    	}
+				if(temp=="wdxx")
+				{
+				  $("#wdxx").removeClass('active').addClass('active');
+				  $("#gl").removeClass('active');
+				}
+				else{
+				  $("#gl").removeClass('active').addClass('active');
+				  $("#wdxx").removeClass('active');
+				}
 			}
 		</script>
-		
 		<script src="${ctx}/static/lib/requirejs/require.debug.js"></script>
 		<script src="${ctx}/static/js/config.js"></script>
 		<script src="${ctx}/static/js/index.js"></script>

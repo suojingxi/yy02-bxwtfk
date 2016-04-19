@@ -8,12 +8,15 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sonymm.bxwtfk.bean.BXWTFK_SENDCONTENT;
+import com.sonymm.bxwtfk.service.ISendContentService;
 
 /**
  * @ClassName: PersonInfoController
@@ -26,31 +29,36 @@ import com.sonymm.bxwtfk.bean.BXWTFK_SENDCONTENT;
 @RequestMapping(value = "/bxwtfk")
 public class PersonInfoController {
 	
-	@RequestMapping(value = "/myInfo/personInfo", method = RequestMethod.GET)
+	@Autowired
+	ISendContentService iSendContentService;
+	
+	@RequestMapping(value = "/myInfo/personInfo", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> personInfo(
             ServletRequest request, HttpSession session) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<BXWTFK_SENDCONTENT> lsc = new ArrayList<BXWTFK_SENDCONTENT>();
-		BXWTFK_SENDCONTENT sendContent = new BXWTFK_SENDCONTENT();
-		sendContent.setContent("这是第一条内容。");
-		sendContent.setContentThemes("内容1");
-		sendContent.setId("111");
-		sendContent.setSendTime("2016-04-01 11:11:00");
-		sendContent.setSendUserinfoId("11");
-		sendContent.setState("1");
-		sendContent.setAcceptUserinfoId("12");
-		lsc.add(sendContent);
-		sendContent = new BXWTFK_SENDCONTENT();
-		sendContent.setContent("这是第二条内容。");
-		sendContent.setContentThemes("内容2");
-		sendContent.setId("222");
-		sendContent.setSendTime("2016-04-01 11:11:11");
-		sendContent.setSendUserinfoId("11");
-		sendContent.setState("0");
-		sendContent.setAcceptUserinfoId("13");
-		lsc.add(sendContent);
-		map.put("SENDCONTENT", lsc);
+		String userId = session.getAttribute("userId").toString();
+		List<Map<String, Object>> lmso = new ArrayList<Map<String,Object>>();
+		lmso = iSendContentService.getSendContent(userId);
+		map.put("SENDCONTENT", lmso);
 		return map;
+	}
+	
+	@RequestMapping(value = "/myInfo/personInfoById", method = RequestMethod.GET)
+    public @ResponseBody Map<String, Object> personInfoById(
+    		@RequestParam(value = "id") String id,
+            ServletRequest request, HttpSession session) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> lmso = iSendContentService.getSendContentById(id);
+		map.put("SENDCONTENT", lmso.get(0));
+		return map;
+	}
+	
+	@RequestMapping(value = "/myInfo/delPersonById", method = RequestMethod.GET)
+    public @ResponseBody int delPersonById(
+    		@RequestParam(value = "id") String id,
+            ServletRequest request, HttpSession session) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		return iSendContentService.delSendContentById(id);
 	}
 
 }
