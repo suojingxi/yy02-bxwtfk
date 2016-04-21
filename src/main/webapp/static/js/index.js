@@ -66,8 +66,29 @@ require([ 'jquery', 'knockout', 'ujs', 'director','error' ], function($, ko) {
 			var path = this.hash.replace('#', '');
 			addRouter(path);
 		});
+		getXX();
 		window.router.init()
 	})
+	
+	function getXX(){
+		//我的信息数
+		var totalUrl = $ctx + '/bxwtfk/myInfo/getPersonInfoNum';
+		$.ajax({
+			type : "GET",
+			contentType : 'application/json',
+			url : totalUrl,
+			dataType : 'json',
+			cache:false,
+			success : function(data) {
+				var num = eval(data);
+				$('#num').html(num);
+
+			},
+			error : function(obj){
+				alert("obj error");
+			}
+		});
+	}
 
 	function initPage(p, id) {
 		var module = p;

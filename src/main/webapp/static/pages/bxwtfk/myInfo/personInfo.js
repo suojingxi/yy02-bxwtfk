@@ -24,9 +24,12 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 			dataType : 'json',
 			success : function(obj) {
 				me.setData(obj);
+				getXX();
 			},
 			error : function(obj){
-				alert("obj error");
+				$("#errorts").html("信息提示");
+				$("#errorinfo").html("由于网络原因，数据加载失败");
+			    $('#errorinfoModel').modal(); 
 			}
 		});
 	}
@@ -34,7 +37,7 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 	this.delcfm = function(e){
 		removexxid=e.id;
 		$("#cfminfo").html("您确认要删除吗？");
-		$("#cfmfunction").attr("onclick","removexx("+removexxid+");");
+		$("#cfmfunction").attr("onclick","removexx('"+removexxid+"');");
 	    $('#cfminfoModel').modal();  
 	}
 	
@@ -49,14 +52,18 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 			},
 			dataType : 'json',
 			success : function(obj) {
-				$("#myRRIFStitle").html(obj.SENDCONTENT.contentThemes);
-				$("#myRRIFSinfo").html(obj.SENDCONTENT.content);
-				$("#myRRIFStime").html(obj.SENDCONTENT.sendTime);
-				$("#myRRIFSinfofunction").attr("onclick","removexx("+id+");");
+				getXX();
+				$("#myRRIFStitle").html(obj.SENDCONTENT.CONTENT_THEMES);
+				$("#myRRIFSinfo").html(obj.SENDCONTENT.CONTENT);
+				$("#myRRIFStime").html(obj.SENDCONTENT.SEND_TIME);
+				$("#myRRIFSinfofunction").attr("onclick","removexx('"+id+"');");
 			    $('#myRRIFSinfoModel').modal(); 
+			    viewModel.load();
 			},
 			error : function(obj){
-				alert("obj error");
+				$("#errorts").html("信息提示");
+				$("#errorinfo").html("由于网络原因，获取当前信息失败");
+			    $('#errorinfoModel').modal(); 
 			}
 		});
 		
@@ -76,13 +83,42 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 			success : function(obj) {
 				if(obj > 0){
 					//移除页面中元素
+					id = "title-" + id;
+					$("#"+id).parent().parent().remove();
+					getXX();
+					viewModel.load();
 				}else{
-					//删除失败
-					
+					$("#errorts").html("信息提示");
+					$("#errorinfo").html("由于网络原因，删除信息失败");
+				    $('#errorinfoModel').modal(); 
 				}
 			},
 			error : function(obj){
-				alert("obj error");
+				$("#errorts").html("信息提示");
+				$("#errorinfo").html("由于网络原因，删除信息失败");
+			    $('#errorinfoModel').modal(); 
+			}
+		});
+	}
+	
+	function getXX(){
+		//我的信息数
+		var totalUrl = $ctx + '/bxwtfk/myInfo/getPersonInfoNum';
+		$.ajax({
+			type : "GET",
+			contentType : 'application/json',
+			url : totalUrl,
+			dataType : 'json',
+			cache:false,
+			success : function(data) {
+				var num = eval(data);
+				$('#num').html(num);
+
+			},
+			error : function(obj){
+				$("#errorts").html("信息提示");
+				$("#errorinfo").html("由于网络原因，修改参数信息失败");
+			    $('#errorinfoModel').modal(); 
 			}
 		});
 	}

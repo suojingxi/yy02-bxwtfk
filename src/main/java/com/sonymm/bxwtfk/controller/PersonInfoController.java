@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sonymm.bxwtfk.bean.BXWTFK_SENDCONTENT;
 import com.sonymm.bxwtfk.service.ISendContentService;
+import com.sonymm.bxwtfk.service.IWtdjTypeContentService;
+import com.sonymm.bxwtfk.service.IWtdjTypeService;
 
 /**
  * @ClassName: PersonInfoController
@@ -32,6 +34,12 @@ public class PersonInfoController {
 	@Autowired
 	ISendContentService iSendContentService;
 	
+	@Autowired
+	IWtdjTypeService iWtdjTypeService;
+	
+	@Autowired
+	IWtdjTypeContentService iWtdjTypeContentService;
+	
 	@RequestMapping(value = "/myInfo/personInfo", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> personInfo(
             ServletRequest request, HttpSession session) throws Exception {
@@ -39,6 +47,35 @@ public class PersonInfoController {
 		String userId = session.getAttribute("userId").toString();
 		List<Map<String, Object>> lmso = new ArrayList<Map<String,Object>>();
 		lmso = iSendContentService.getSendContent(userId);
+		//修改数据:将问题类型代码转换成文字
+		for(int i=0; i<lmso.size(); i++){
+			StringBuffer typeCode = new StringBuffer();
+			Map<String, Object> mso = lmso.get(i);
+			String code = mso.get("CONTENT_THEMES").toString();
+			String[] codes = code.split(",");
+			for(String str : codes){
+				if(typeCode.indexOf(str) < 0){
+					typeCode.append(str+",");
+				}
+			}
+			String typeCodes = typeCode.substring(0, typeCode.length()-1);
+			//修改主题
+			String typeNames = iWtdjTypeService.getNamesByCodes(typeCodes);
+			lmso.get(i).remove("CONTENT_THEMES");
+			lmso.get(i).put("CONTENT_THEMES", typeNames);
+			//修改内容
+			String content = lmso.get(i).get("CONTENT")==null?"":lmso.get(i).get("CONTENT").toString();
+			//1.通过主题代码如：A01,B01获取到如：单据填写问题：金额有误；单据审批问题：超标末审；
+			StringBuffer contentName = new StringBuffer();
+			for(String str : codes){
+				String typeName = iWtdjTypeService.getNameByCode(str.substring(0,1));
+				String codeName = iWtdjTypeContentService.getContentNameByCode(str.substring(1,str.length()));
+				contentName.append(typeName + ":" + codeName + ";");
+			}
+			contentName.append(content);
+			lmso.get(i).remove("CONTENT");
+			lmso.get(i).put("CONTENT", contentName);
+		}
 		map.put("SENDCONTENT", lmso);
 		return map;
 	}
@@ -47,8 +84,43 @@ public class PersonInfoController {
     public @ResponseBody Map<String, Object> personInfoById(
     		@RequestParam(value = "id") String id,
             ServletRequest request, HttpSession session) throws Exception {
+		//更新数据已读未读状态
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Map<String, Object>> lmso = iSendContentService.getSendContentById(id);
+		//更新数据已读未读状态
+		if(lmso.get(0).get("DU_STATU").toString().equals("0")){
+			iSendContentService.updateContent(id);
+			lmso.get(0).remove("DU_STATU");
+			lmso.get(0).put("DU_STATU", "1");
+		}
+		//修改数据:将问题类型代码转换成文字
+		StringBuffer typeCode = new StringBuffer();
+		Map<String, Object> mso = lmso.get(0);
+		String code = mso.get("CONTENT_THEMES").toString();
+		String[] codes = code.split(",");
+		for(String str : codes){
+			if(typeCode.indexOf(str) < 0){
+				typeCode.append(str+",");
+			}
+		}
+		String typeCodes = typeCode.substring(0, typeCode.length()-1);
+		//修改主题
+		String typeNames = iWtdjTypeService.getNamesByCodes(typeCodes);
+		lmso.get(0).remove("CONTENT_THEMES");
+		lmso.get(0).put("CONTENT_THEMES", typeNames);
+		//修改内容
+		String content = lmso.get(0).get("CONTENT")==null?"":lmso.get(0).get("CONTENT").toString();
+		//1.通过主题代码如：A01,B01获取到如：单据填写问题：金额有误；单据审批问题：超标末审；
+		StringBuffer contentName = new StringBuffer();
+		for(String str : codes){
+			String typeName = iWtdjTypeService.getNameByCode(str.substring(0,1));
+			String codeName = iWtdjTypeContentService.getContentNameByCode(str.substring(1,str.length()));
+			contentName.append(typeName + ":" + codeName + ";");
+		}
+		contentName.append(content);
+		lmso.get(0).remove("CONTENT");
+		lmso.get(0).put("CONTENT", contentName);
 		map.put("SENDCONTENT", lmso.get(0));
 		return map;
 	}
@@ -59,6 +131,13 @@ public class PersonInfoController {
             ServletRequest request, HttpSession session) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		return iSendContentService.delSendContentById(id);
+	}
+	
+	@RequestMapping(value = "/myInfo/getPersonInfoNum", method = RequestMethod.GET)
+    public @ResponseBody int getPersonInfoNum(
+            ServletRequest request, HttpSession session) throws Exception {
+		String userId = session.getAttribute("userId").toString();
+		return iSendContentService.getTotalWd(userId);
 	}
 
 }

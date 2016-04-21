@@ -17,7 +17,7 @@
 		<div class="main">
 			<div class="left">
 				<ul class="sub-menu list-group" style="width:100%;" >
-					<li style="display:none;" class="active list-group-item" id="wdxx" onclick="javascript:show(this)"><span class="badge">14</span><a href="#/bxwtfk/myInfo/personInfo">我的信息</a></li>
+					<li style="display:none;" class="active list-group-item" id="wdxx" onclick="javascript:show(this)"><span class="badge" id="num"></span><a href="#/bxwtfk/myInfo/personInfo">我的信息</a></li>
 					<li style="display:none;" class="list-group-item"  id="gl" onclick="javascript:show(this)"><a href="#/bxwtfk/myManager/sendManager">管理</a></li>
 				</ul>
 			</div>
@@ -32,7 +32,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">×</span>
 				</button>  
-				<h4 class="modal-title">错误提示</h4>  
+				<h4 class="modal-title" id="errorts">错误提示</h4>  
 	 		</div>  
 	 		<div class="modal-body">  
 				<p id="errorinfo"></p>  
@@ -44,7 +44,52 @@
 		</div><!-- /.modal-content -->  
 	</div><!-- /.modal-dialog -->  
 </div><!-- /.modal -->
-		
+
+<!-- 信息删除确认 -->  
+<div class="modal fade" id="cfminfoModel">  
+	<div class="modal-dialog">  
+		<div class="modal-content message_align">  
+	  		<div class="modal-header">  
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>  
+				<h4 class="modal-title">提示信息</h4>  
+	  		</div>  
+	  		<div class="modal-body">  
+				<p id="cfminfo"></p>  
+	  		</div>  
+	  		<div class="modal-footer">  
+		 		<input type="hidden" id="url"/>  
+		 		<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>  
+		 		<a id="cfmfunction"  onclick="removexx(this);" class="btn btn-success" data-dismiss="modal">确定</a>  
+	  		</div>  
+		</div><!-- /.modal-content -->  
+  	</div><!-- /.modal-dialog -->  
+</div><!-- /.modal -->  
+
+	
+<!-- 详细信息 -->  
+<div class="modal fade" id="myRRIFSinfoModel">  
+	<div class="modal-dialog">  
+		<div class="modal-content message_align">  
+			<div class="modal-header">  
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>  
+				<h4 id="myRRIFStitle" class="modal-title"></h4>  
+			</div>  
+			<div class="modal-body">  
+				<p id="myRRIFSinfo"></p>  
+			</div>  
+			<div class="modal-footer">  
+				<input type="hidden" id="url"/>  
+				<p style="float:left" id="myRRIFStime" class="modal-title"></p>  
+			 	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>  
+			 	<a id="myRRIFSinfofunction"  onclick="" class="btn btn-success" data-dismiss="modal">删除</a>  
+		  	</div>  
+		</div><!-- /.modal-content -->  
+  	</div><!-- /.modal-dialog -->  
+</div><!-- /.modal --> 	
 		
 		
 		

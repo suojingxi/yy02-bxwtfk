@@ -15,7 +15,7 @@ public interface IUserinfoService {
 	/**
      * 查询表中所有人员
      * @param 
-     * @return List<BXWTFK_USERINFO>
+     * @return List<Map<String, Object>>
      */
     public List<Map<String, Object>> getAllUserinfo() throws Exception;
     

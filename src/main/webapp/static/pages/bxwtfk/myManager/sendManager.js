@@ -30,7 +30,9 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 				me.setData(obj);
 			},
 			error : function(obj){
-				alert("obj error");
+				$("#errorts").html("信息提示");
+				$("#errorinfo").html("由于网络原因，加载用户信息失败");
+			    $('#errorinfoModel').modal(); 
 			}
 		});
 	}
@@ -48,7 +50,9 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 				me.setData(obj);
 			},
 			error : function(obj){
-				alert("obj error");
+				$("#errorts").html("信息提示");
+				$("#errorinfo").html("由于网络原因，加载所有用户信息失败");
+			    $('#errorinfoModel').modal(); 
 			}
 		});
 	}
@@ -200,8 +204,8 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 	
 	//添加问题类型
 	window.addProblemMap = new HashMap(); 
-	  function addproblem(e){
-	  	var temp=e.id;
+	this.addproblem = function(e){
+		var temp=e.id;
 	  	var problemid=temp;
 		var problemtext=$("#"+temp).text();
 //	  	addProblemMap.put(e,1); 
@@ -215,44 +219,50 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 			$('#errorinfoModel').modal(); 
 			return;
 		} else {
-			  $("#problem").append("<div class='problem_div'><div class='problem_div_select'>"+problemtext+"</div><div class='problem_div_delete'><img id='remove"+problemid+"' onclick='removeproblem(this)' src='./static/images/delete.jpg' /></div></div>");
+			window.addProblemMap.put(temp,1); 
+			$("#problem").append("<div class='problem_div'><div class='problem_div_select'>"+problemtext+"</div><div class='problem_div_delete'><img id='remove"+problemid+"' onclick='removeaddProblem(this)' src='./static/images/delete.jpg' /></div></div>");
 		}
 	  }
-	  function removeaddProblem(e){
+	  this.removeaddProblem = function(e){
 	     var temp=e.id;
 		 var id=temp.substring(6,temp.length);
-		 //alert(id);
 		 addProblemMap.remove(id);
 	     $("#"+temp).parent().parent().remove();
 	  }
 	
-	var cfmremoveall = function(){
-		$("#cfminfo").html("您确认要清空所有已选人员与单据错误类型吗？");
+	this.cfmremoveall = function(){
+		$("#cfminfo").html("您确认要清空所选内容吗？");
 		$("#cfmfunction").attr("onclick","removeall();");
-        $('#cfminfoModel').modal();  
+        $('#cfminfoModel').modal();
 	}
 	
-	var removeall = function (){		
-		problemmap.clear();
-		map.clear();
+	this.removeall = function (){	
+		window.map.clear();	
+		window.addProblemMap.clear();
 		$("#problem").empty();
 		$("#table_1").empty();
+		$('#fbcontent').val('');
 		$("#problem").append("<div style='width:100px;float:left;margin-top:5px;'>已选择的问题：</div>");
 		return;
 	}
 	
 	this.submitRIFS = function(){
 		//获取添加人员信息，问题类型信息，具体描述信息
+		//判断：如果获取添加人员信息，问题类型信息，为空则提示
 		var arri = new Array();
 		arri = window.map.keySet();
-		if(arri==null){
-			alert("添加人员");
+		if(arri.length==0){
+			$("#errorts").html("信息提示");
+			$("#errorinfo").html("请添加人员信息");
+		    $('#errorinfoModel').modal(); 
 			return;
 		}
 		var arrp = new Array();
 		arrp = window.addProblemMap.keySet();
-		if(arrp==null){
-			alert("选择问题");
+		if(arrp.length==0){
+			$("#errorts").html("信息提示");
+			$("#errorinfo").html("请选择问题类型");
+		    $('#errorinfoModel').modal(); 
 			return;
 		}
 		var ids = "";
@@ -262,12 +272,10 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 		ids = ids.substring(0,ids.length-1);
 		var problems = "";
 		for(var i=0; i < arrp.length; i++){
-			problems += arrp[0] + ",";
+			problems += arrp[i] + ",";
 		}
 		problems = problems.substring(0,problems.length-1);
-		var content = $("fbcontent").val();
-		
-		//判断：如果获取添加人员信息，问题类型信息，为空则提示
+		var content = $("#fbcontent").val();
 		
 		$.ajax({
 			type : 'POST',
@@ -281,14 +289,47 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 			dataType : 'json',
 			success : function(obj) {
 				if(obj > 0){
-					alert("success");
+					$("#errorts").html("信息提示");
+					$("#errorinfo").html("发布信息成功");
+				    $('#errorinfoModel').modal(); 
+					removeall();
 				}
 			},
 			error : function(obj){
-				alert("obj error");
+				$("#errorts").html("信息提示");
+				$("#errorinfo").html("由于网络原因，发布信息失败");
+			    $('#errorinfoModel').modal(); 
 			}
 		});
     }
+	
+	this.serchUser = function(){
+		viewModel.serchU();
+	}
+	
+	viewModel.serchU = function(){
+		var me = this;
+		var serchContent = $("#serchContent").val();
+		$.ajax({
+			type : 'GET',
+			cache : false,
+			url : $ctx + "/bxwtfk/myManager/getSerchUser",
+			data : {
+				serchContent : serchContent
+			},
+			dataType : 'json',
+			success : function(obj) {
+//				$("#showuser").empty();
+//				$("#showuser").append("<li><div class='userinfolileft'><input type='hidden' data-bind='value: userId' /><input type='hidden' data-bind='value: position' /><input type='hidden' data-bind='value: email' /><p><span class='user_name' data-bind='text: name'></span>&nbsp;&nbsp;<span class='user_department' data-bind='text: deptName'></span></p><p class='user_mobile'><span data-bind='text: mobile'></span></p></div><div class='add'><input type='image' src='./static/images/add.gif' data-bind='click:addUser' alt='添加'/></div></li>");
+				me.setData(obj);
+			},
+			error : function(obj){
+				$("#errorts").html("信息提示");
+				$("#errorinfo").html("由于网络原因，搜索用户信息失败");
+			    $('#errorinfoModel').modal(); 
+			}
+		});
+	}
 	
 	var init = function() {
 		viewModel.loadAll();

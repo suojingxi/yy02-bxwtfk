@@ -56,6 +56,38 @@ public class SendManagerController {
 		return map;
 	}
 	
+	@RequestMapping(value = "/myManager/getSerchUser", method = RequestMethod.GET)
+    public @ResponseBody Map<String, Object> getSerchUser(
+    		@RequestParam(value="serchContent") String serchContent,
+            ServletRequest request, HttpSession session) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> lui = new ArrayList<Map<String, Object>>();
+		//获取工作圈中企业所有员工信息
+		String all_auth = getAuth.getAllAuth();
+		Map<String, Object> lmss = convertJson.getMapByJson(all_auth);
+		lui = convertJson.getListByJson(lmss.get("employeeInfo").toString());
+		String type = "";
+		if((!serchContent.equals(""))&&serchContent!=null){
+			String ind = serchContent.substring(0, 1);
+			if(Character.isDigit(ind.charAt(0))){
+				type = "mobile";
+			}else{
+				type = "name";
+			}
+			for(int i=0; i<lui.size(); i++){
+				if(lui.get(i).get(type) == null || lui.get(i).get(type).equals("")){
+					lui.remove(i);
+					i--;
+				}else if(lui.get(i).get(type).toString().indexOf(serchContent.trim())<0){
+					lui.remove(i);
+					i--;
+				}
+			}
+		}
+		map.put("ALLUSERINFO", lui);
+		return map;
+	}
+	
 	@RequestMapping(value = "/myManager/sendManager", method = RequestMethod.POST)
     public @ResponseBody int sendManager(
     		@RequestParam(value="ids") String ids,//传过来的是userId串
@@ -64,13 +96,15 @@ public class SendManagerController {
             ServletRequest request, HttpSession session) throws Exception {
 		String userId = session.getAttribute("userId").toString();
 		List<Map<String, Object>> lmso = new ArrayList<Map<String,Object>>();
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = null;
 		//解析传过来的参数
 		String[] userIds = ids.split(",");
 		Date date=new Date();
 		DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for(String id : userIds){
-			map.put("id", UUIDUtil.genUUID());
+			String uuid = UUIDUtil.genUUID();
+			map = new HashMap<String, Object>();
+			map.put("id", uuid);
 			map.put("acceptUserinfoId", id);
 			map.put("sendUserinfoId", userId);
 			map.put("contentThemes", problems);
@@ -85,7 +119,7 @@ public class SendManagerController {
 		int count = iSendContentService.insertContent(lmso);
 		if(count > 0){
 			//发送工作圈，如果发送失败，则重新发送，知道发送成功
-			
+			//TODO
 		}
 		return count;
 	}

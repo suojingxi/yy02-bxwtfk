@@ -19,4 +19,10 @@ public interface ISendContentService {
 	
 	//插入多条语句
 	int insertContent(List<Map<String, Object>> lmso) throws Exception ;
+	
+	//通过ID更新该条数据的已读未读状态，更新为已读
+	int updateContent(String id) throws Exception;
+	
+	//获取当前登录人员的信息未读信息总数
+	int getTotalWd(String userId) throws Exception;
 }

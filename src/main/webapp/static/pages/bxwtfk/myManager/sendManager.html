@@ -6,15 +6,15 @@
 		<div ><img style="width:270px" src="./static/images/t_1.gif"></div>
 		<div class="userinfoleft_top">
 			<div class="input-group" style="margin-top:10px;margin-left:10px;margin-right:20px;">
-				<span class="input-group-addon" id="basic-addon1" >
+				<span class="input-group-addon" id="basic-addon1" onclick="serchUser();">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 				</span>
-				<input type="text" class="form-control" placeholder="搜索" aria-describedby="basic-addon1">
+				<input type="text" class="form-control" placeholder="搜索姓名或手机号" aria-describedby="basic-addon1" id="serchContent">
 			</div>
 		</div>
 		<div class="list">
-			<ul class="tw_rightTeamBar" data-bind="foreach: data.allUser">
-				<li style="border:solid 0px #d8d8d8;">
+			<ul class="tw_rightTeamBar" data-bind="foreach: data.allUser" id="showuser">
+				<li>
 					<div class="userinfolileft">
 						<input type="hidden" data-bind="value: userId" />
 						<input type="hidden" data-bind="value: position" />

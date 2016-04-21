@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.sonymm.bxwtfk.dao.SendContentDao;
 import com.sonymm.bxwtfk.service.ISendContentService;
+import com.sonymm.bxwtfk.service.pagination.IPaginationService;
 
 @Service
 public class SendContentServiceImpl implements ISendContentService {
@@ -19,10 +20,13 @@ public class SendContentServiceImpl implements ISendContentService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	@Autowired
+	private IPaginationService ipaginationservice;
+	
 	@Override
 	public List<Map<String, Object>> getSendContent(String acceptUserinfoId)
 			throws Exception {
-		String sql = "SELECT * FROM BXWTFK_SENDCONTENT s where 1 = 1 and s.STATU = '0' and s.ACCEPT_USERINFO_ID = '" + acceptUserinfoId + "'";
+		String sql = "SELECT * FROM BXWTFK_SENDCONTENT s where 1 = 1 and s.STATU = '0' and s.ACCEPT_USERINFO_ID = '" + acceptUserinfoId + "' ORDER BY s.SEND_TIME DESC";
 		return jdbcTemplate.queryForList(sql);
 	}
 
@@ -47,7 +51,7 @@ public class SendContentServiceImpl implements ISendContentService {
 	@Override
 	public int insertContent(List<Map<String, Object>> lmso) throws Exception {
 		final List<Map<String, Object>> lm = lmso;
-		String sql = "INSERT INTO BXWTFK_SENDCONTENT (ID,ACCEPT_USERINFO_ID,SEND_USERINFO_ID,CONTENT_THEMES,CONTENT,SEND_TIME,DELETE_TIME,DU_STATU,STATU) VALUES(?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO BXWTFK_SENDCONTENT (ID,ACCEPT_USERINFO_ID,SEND_USERINFO_ID,CONTENT_THEMES,CONTENT,SEND_TIME,DELETE_TIME,DU_STATU,STATU) VALUES (?,?,?,?,?,?,?,?,?)";
 		int[] count = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			
 			@Override
@@ -69,6 +73,18 @@ public class SendContentServiceImpl implements ISendContentService {
 			}
 		});
 		return count.length;
+	}
+
+	@Override
+	public int updateContent(String id) throws Exception {
+		String sql = "update bxwtfk_sendcontent w set w.du_statu='1' where w.id='"+id+"'";
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public int getTotalWd(String userId) throws Exception {
+		String sql = "select * from bxwtfk_sendcontent t where t.accept_userinfo_id = '"+userId+"' and t.du_statu = '0'";
+		return ipaginationservice.getDataCount(sql);
 	}
 
 }
