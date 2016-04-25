@@ -14,7 +14,7 @@ public class WtdjTypeContentServiceImpl implements IWtdjTypeContentService {
 	
 	@Override
 	public String getContentNameByCode(String code) throws Exception {
-		String sql = "SELECT * FROM BXWTFK_WTDJTYPECONTENT w WHERE w.CODE = '"+code+"'";
+		String sql = "SELECT * FROM BXWTFK_WTDJTYPECONTENT w WHERE w.WTDJTYPE_CODE = '" + code.substring(0, 1) + "' and w.CODE = '" + code.substring(1, code.length()) + "'";
 		return jdbcTemplate.queryForList(sql).get(0).get("NAME").toString();
 	}
 

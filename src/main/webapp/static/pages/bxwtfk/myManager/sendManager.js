@@ -56,7 +56,13 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 			}
 		});
 	}
-	
+	 //回车提交事件
+	this.getKey=function()  
+	{  
+	    if(event.keyCode==13){  
+	    	serchUser();
+	    }     
+	} 
 	function HashMap(){  
 		//定义长度  
 		var length = 0;  
@@ -265,6 +271,13 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 		    $('#errorinfoModel').modal(); 
 			return;
 		}
+		var content = $("#fbcontent").val();
+		if(content.length > 100){
+			$("#errorts").html("信息提示");
+			$("#errorinfo").html("您输入的信息太多，请精简内容");
+		    $('#errorinfoModel').modal(); 
+			return;
+		}
 		var ids = "";
 		for(var i=0; i < arri.length; i++){
 			ids += arri[i] + ",";
@@ -275,7 +288,6 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 			problems += arrp[i] + ",";
 		}
 		problems = problems.substring(0,problems.length-1);
-		var content = $("#fbcontent").val();
 		
 		$.ajax({
 			type : 'POST',

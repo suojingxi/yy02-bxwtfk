@@ -2,6 +2,9 @@ package com.sonymm.bxwtfk.service.impl;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +42,10 @@ public class SendContentServiceImpl implements ISendContentService {
 
 	@Override
 	public int delSendContentById(String id) throws Exception {
-		return jdbcTemplate.update("DELETE FROM BXWTFK_SENDCONTENT s where 1 = 1 and s.ID = ?",new Object[]{ id });
+		Date date=new Date();
+		DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return jdbcTemplate.update("UPDATE BXWTFK_SENDCONTENT s SET s.DELETE_TIME = ?, s.STATU = '1' WHERE s.ID = ?", new Object[]{format.format(date), id});
+//		return jdbcTemplate.update("DELETE FROM BXWTFK_SENDCONTENT s where 1 = 1 and s.ID = ?",new Object[]{ id });
 	}
 
 	@Override

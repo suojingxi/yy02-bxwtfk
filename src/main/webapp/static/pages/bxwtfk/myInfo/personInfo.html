@@ -8,7 +8,7 @@
 		<div class="title">
 			<a href="javascript:;" data-bind='attr:{id:"title-"+ID}' onclick="showmyInfo(this);">
 				<span data-bind="if:DU_STATU==0">
-					<p style="font-weight: bold;" data-bind="text:CONTENT_THEMES.length>8?CONTENT_THEMES.substr(0,8)+'...':CONTENT_THEMES"></p>
+					<p style="font-weight: bold; color: red;" data-bind="text:CONTENT_THEMES.length>8?CONTENT_THEMES.substr(0,8)+'...':CONTENT_THEMES"></p>
 				</span>
 				<span data-bind="if:DU_STATU==1">
 					<p data-bind="text:CONTENT_THEMES.length>8?CONTENT_THEMES.substr(0,8)+'...':CONTENT_THEMES"></p>
@@ -19,7 +19,7 @@
 			<p data-bind="text:SEND_TIME"></p>
 		</div>
 		<div class="displayPart" displayLength="100">
-			<p data-bind="text:CONTENT.length>8?CONTENT.substr(0,8)+'...':CONTENT"></p>
+			<p data-bind="text:CONTENT.length>15?CONTENT.substr(0,15)+'...':CONTENT"></p>
 		</div>
         <div class="myinfo" style="display:none;">
         	<p data-bind="text:CONTENT"></p>

@@ -119,7 +119,7 @@ public class SendManagerController {
 		int count = iSendContentService.insertContent(lmso);
 		if(count > 0){
 			//发送工作圈，如果发送失败，则重新发送，知道发送成功
-			//TODO
+			//TODO 需要传递的参数为ids，和转换过的problems
 		}
 		return count;
 	}

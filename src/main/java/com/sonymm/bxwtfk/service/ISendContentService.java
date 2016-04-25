@@ -14,7 +14,7 @@ public interface ISendContentService {
 	//通过信息记录ID删除一条信息
 	int delSendContentById(String id) throws Exception ;
 	
-	//通过acceptUserinfoId 删除当前登录人的所有信息
+	//通过acceptUserinfoId 删除当前登录人的所有信息 , 这里做假删除更新删除时间和删除状态
 	int delSendContentByAcceptId(String acceptUserinfoId) throws Exception ;
 	
 	//插入多条语句

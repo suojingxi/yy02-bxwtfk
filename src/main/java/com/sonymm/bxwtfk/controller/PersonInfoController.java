@@ -69,7 +69,7 @@ public class PersonInfoController {
 			StringBuffer contentName = new StringBuffer();
 			for(String str : codes){
 				String typeName = iWtdjTypeService.getNameByCode(str.substring(0,1));
-				String codeName = iWtdjTypeContentService.getContentNameByCode(str.substring(1,str.length()));
+				String codeName = iWtdjTypeContentService.getContentNameByCode(str);
 				contentName.append(typeName + ":" + codeName + ";");
 			}
 			contentName.append(content);
@@ -115,7 +115,7 @@ public class PersonInfoController {
 		StringBuffer contentName = new StringBuffer();
 		for(String str : codes){
 			String typeName = iWtdjTypeService.getNameByCode(str.substring(0,1));
-			String codeName = iWtdjTypeContentService.getContentNameByCode(str.substring(1,str.length()));
+			String codeName = iWtdjTypeContentService.getContentNameByCode(str);
 			contentName.append(typeName + ":" + codeName + ";");
 		}
 		contentName.append(content);

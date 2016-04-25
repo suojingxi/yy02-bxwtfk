@@ -1,7 +1,7 @@
 *{ margin:0; padding:0;}
 img{ border:none}
 a{ color:#151515; text-decoration:none;}
-a:hover{ color:#151515; text-decoration:underline;}
+a:hover{ color:#151515; text-decoration:none;}
 a:active{ color:#151515; text-decoration:none;}
 body{ font-family:"Î¢ÈíÑÅºÚ"; font-size:14px; line-height:18px; color:#151515;}
 
@@ -74,8 +74,8 @@ input[type="text"], input[type="password"] {
 .tw_rightTeamBar a:hover{ text-decoration: none;}
 
 .user_mobile{ color: #a8a6a6;}
-.userinfolileft{width:180px;float:left;}
-.add{width:20px;;float:right;}
+.userinfolileft{width:180px;height:64px;float:left;}
+.add{width:20px;;float:right;margin-top:20px;margin-bottom:14px;height:30px;}
 
 
 
