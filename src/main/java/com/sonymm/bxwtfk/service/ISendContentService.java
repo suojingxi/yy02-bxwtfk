@@ -25,4 +25,7 @@ public interface ISendContentService {
 	
 	//获取当前登录人员的信息未读信息总数
 	int getTotalWd(String userId) throws Exception;
+	
+	//根据发送内容ID将此条信息标记为未读
+	int bjwdSendContentById(String id) throws Exception;
 }

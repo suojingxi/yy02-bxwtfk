@@ -47,6 +47,11 @@ public class SendContentServiceImpl implements ISendContentService {
 		return jdbcTemplate.update("UPDATE BXWTFK_SENDCONTENT s SET s.DELETE_TIME = ?, s.STATU = '1' WHERE s.ID = ?", new Object[]{format.format(date), id});
 //		return jdbcTemplate.update("DELETE FROM BXWTFK_SENDCONTENT s where 1 = 1 and s.ID = ?",new Object[]{ id });
 	}
+	
+	@Override
+	public int bjwdSendContentById(String id) throws Exception {
+		return jdbcTemplate.update("UPDATE BXWTFK_SENDCONTENT s SET s.DU_STATU = '0' WHERE s.ID = ?", new Object[]{id});
+	}
 
 	@Override
 	public int delSendContentByAcceptId(String acceptUserinfoId)

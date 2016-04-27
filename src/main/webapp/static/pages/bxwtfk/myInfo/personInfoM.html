@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <title>报销信息反馈详情</title>
+	    <!-- Sets initial viewport load and disables zooming  -->
+	    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+	    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+	    <meta name="apple-mobile-web-app-capable" content="yes">
+	    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+	    <!-- Include the compiled Ratchet CSS -->
+	    <link href="./static/lib/lib/ratchet/css/ratchet.css" rel="stylesheet">
+	    <!-- Include the compiled Ratchet JS -->
+	    <script src="./static/lib/lib/ratchet/js/ratchet.js"></script>
+	    
+  	</head>
+  	<body>
+	    <!-- Make sure all your bars are the first things in your <body> -->
+	   	<header class="bar bar-nav" style="background-color:#00bbd2;">
+		    <a href="javascript:;" onclick="returnInd();" style="color:white;" class="icon icon-left-nav pull-left"></a>
+		    <a href="#delPrompt" class="icon icon-trash pull-right"  style="color:white;"></a>
+		    <h1 class="title" style="color:white;">报销信息反馈详情</h1>
+	  	</header>
+	   	<div class="content" style="margin-top:0px;" data-bind="foreach:data.content">
+	   		<input type="hidden" data-bind="value:ID" id="xxnr"/>
+	    	<ul class="table-view">
+	      		<li class="table-view-cell">
+	          		<span class="media-object pull-left icon icon-home"></span>
+	          		<div class="media-body"><span data-bind="text:CONTENT_THEMES"></span></div>
+	      		</li>
+	      		<li class="table-view-cell">
+		          	<img class="media-object pull-left" src="./static/lib/ratchet/images/time.jpg" style="width:25px;height:25px;"/>
+		          	<div class="media-body"><span data-bind="text:SEND_TIME"></span></div>
+	      		</li>
+	      		<li class="table-view-cell">
+		          	<span class="media-object pull-left icon icon-bars"></span>
+		          	<div class="media-body"><span data-bind="text:CONTENT"></span></div>
+	      		</li>
+	    	</ul>
+	    </div>
+	  	<div class="bar bar-standard bar-footer">
+	    	<button class="btn btn-positive btn-block" onclick="bjwd();">标记为未读</button>
+	  	</div>
+		<div id="delPrompt" class="modal">
+  			<header class="bar bar-nav">
+				<a href="#delPrompt"><button class="btn" style="float:left;">取消</button></a>
+	    		<h1 class="title">删除</h1>
+				<a href="javascript:;" onclick="delcfm();"><button class="btn" style="float:right;">确定</button></a>
+  			</header>
+			<div class="content" style="text-align: center;">
+    			<p class="content-padded">您确定要删除当前信息吗？</p>
+  			</div>
+		</div>
+	  	<script src="./static/lib/requirejs/require.debug.js"></script>
+		<script src="./static/js/config.js"></script>
+  	</body>
+</html>

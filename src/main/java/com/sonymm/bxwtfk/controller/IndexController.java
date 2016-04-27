@@ -19,6 +19,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.sonymm.bxwtfk.bean.BXWTFK_USERINFO;
 import com.sonymm.bxwtfk.common.GetAuth;
@@ -27,6 +28,7 @@ import com.sonymm.bxwtfk.entity.ObjectsDetail;
 import com.sonymm.bxwtfk.service.IFunctionsService;
 import com.sonymm.bxwtfk.service.IUserinfoService;
 import com.sonymm.bxwtfk.util.ConvertJson;
+import com.sonymm.bxwtfk.util.DeviceUtil;
 import com.sonymm.bxwtfk.util.FunctionURLReader;
 import com.sonymm.bxwtfk.vo.FunctionVO;
 
@@ -110,8 +112,15 @@ public class IndexController {
 				session.setAttribute("userName", users[0].getUser_name());
 				session.setAttribute("userId", auth_map.get(0).get("userId").toString());
 				
-				return "index";
+				//判断登录端设备
+				String dev = DeviceUtil.getDevice(request.getHeader("user-agent"));
 				
+				if(dev.equals("mobile")) {
+					return "indexm";
+				} else {
+					//TODO
+					return "indexm";
+				}
 			}else{//如果不是企业员工默认为恶意攻击，直接跳出系统
 				return "";
 			}

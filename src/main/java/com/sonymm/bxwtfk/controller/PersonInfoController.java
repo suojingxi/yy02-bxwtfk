@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.sonymm.bxwtfk.bean.BXWTFK_SENDCONTENT;
 import com.sonymm.bxwtfk.service.ISendContentService;
@@ -139,5 +141,21 @@ public class PersonInfoController {
 		String userId = session.getAttribute("userId").toString();
 		return iSendContentService.getTotalWd(userId);
 	}
-
+	
+	@RequestMapping(value = "/myInfo/returnIndex", method = RequestMethod.GET)
+    public @ResponseBody ModelAndView returnIndex(
+            ServletRequest request, ServletResponse response, HttpSession session) throws Exception {
+		return new ModelAndView("redirect:/");
+//		return "redirect:/indexm";
+//		request.getRequestDispatcher("/WEB-INF/views/indexm.ftl").forward(request, response);
+	}
+	
+	//标记未读状态
+	@RequestMapping(value = "/myInfo/bjPersonById", method = RequestMethod.GET)
+    public @ResponseBody int bjPersonById(
+    		@RequestParam(value = "id") String id,
+            ServletRequest request, HttpSession session) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		return iSendContentService.bjwdSendContentById(id);
+	}
 }
