@@ -1,28 +1,58 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<div id="divwdxx" class="myinfodiv row" style="margin-left:auto;margin-right:auto;" data-bind="foreach:data.content">
-	<div class="col-xs-4 col-md-3 mod_1">
-		<input type="hidden" data-bind="value:ID">
-		<div class="del" >
-			<a href="javascript:;" data-bind='attr:{id:ID}' onclick="delcfm(this);"><img src="./static/images/del.gif" /></a>
+<style type="text/css">
+*{ margin: 0; padding: 0;}
+body{ padding: 20px 0 0 20px;}
+.xxxx{
+	width:900px;
+	height:500px;
+}
+.header{
+	margin-bottom:5px;	
+	margin-left:5px;
+}
+.middle{
+	margin:0 auto;
+	padding:10px;
+	border:1px solid #999999;
+	border-radius:15px;
+	width: 893px;
+	height: 252px;
+}
+.hr{
+	width:850px;
+	height:1px;
+	margin:0px auto;
+	padding:0px;
+	background-color:#D5D5D5;
+	overflow:hidden;
+}
+</style>
+<div id="personInfoym">
+	<div id="divwdxx" class="myinfodiv row" style="margin-left:auto;margin-right:auto;" data-bind="foreach:data.content">
+		<div class="col-xs-4 col-md-3 mod_1">
+			<input type="hidden" data-bind="value:ID">
+			<div class="del" >
+				<a href="javascript:;" data-bind='attr:{id:ID}' onclick="delcfm(this);"><img src="./static/images/del.gif" /></a>
+			</div>
+			<div class="title">
+				<a href="javascript:;" data-bind='attr:{id:"title-"+ID}' onclick="showmyInfo(this);">
+					<span data-bind="if:DU_STATU==0">
+						<p style="font-weight: bold; color: red;" data-bind="text:CONTENT_THEMES.length>8?CONTENT_THEMES.substr(0,8)+'...':CONTENT_THEMES"></p>
+					</span>
+					<span data-bind="if:DU_STATU==1">
+						<p data-bind="text:CONTENT_THEMES.length>8?CONTENT_THEMES.substr(0,8)+'...':CONTENT_THEMES"></p>
+					</span>
+				</a>
+			</div>
+			<div class="time">
+				<p data-bind="text:SEND_TIME"></p>
+			</div>
+			<div class="displayPart" displayLength="100">
+				<p data-bind="text:CONTENT.length>15?CONTENT.substr(0,15)+'...':CONTENT"></p>
+			</div>
+	        <div class="myinfo" style="display:none;">
+	        	<p data-bind="text:CONTENT"></p>
+	        </div>
 		</div>
-		<div class="title">
-			<a href="javascript:;" data-bind='attr:{id:"title-"+ID}' onclick="showmyInfo(this);">
-				<span data-bind="if:DU_STATU==0">
-					<p style="font-weight: bold; color: red;" data-bind="text:CONTENT_THEMES.length>8?CONTENT_THEMES.substr(0,8)+'...':CONTENT_THEMES"></p>
-				</span>
-				<span data-bind="if:DU_STATU==1">
-					<p data-bind="text:CONTENT_THEMES.length>8?CONTENT_THEMES.substr(0,8)+'...':CONTENT_THEMES"></p>
-				</span>
-			</a>
-		</div>
-		<div class="time">
-			<p data-bind="text:SEND_TIME"></p>
-		</div>
-		<div class="displayPart" displayLength="100">
-			<p data-bind="text:CONTENT.length>15?CONTENT.substr(0,15)+'...':CONTENT"></p>
-		</div>
-        <div class="myinfo" style="display:none;">
-        	<p data-bind="text:CONTENT"></p>
-        </div>
 	</div>
 </div>

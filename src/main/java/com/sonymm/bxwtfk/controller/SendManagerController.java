@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sonymm.bxwtfk.common.GetAuth;
+import com.sonymm.bxwtfk.common.SendAuthMessage;
 import com.sonymm.bxwtfk.service.ISendContentService;
 import com.sonymm.bxwtfk.util.ConvertJson;
 import com.sonymm.bxwtfk.util.UUIDUtil;
@@ -42,6 +43,9 @@ public class SendManagerController {
 	
 	@Autowired
 	ISendContentService iSendContentService;
+	
+	@Autowired
+	SendAuthMessage sendAuthMessage;
 	
 	@RequestMapping(value = "/myManager/getAllUser", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> getAllUser(
@@ -101,6 +105,8 @@ public class SendManagerController {
 		String[] userIds = ids.split(",");
 		Date date=new Date();
 		DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String nowTime = format.format(date);
+		StringBuffer infojx = new StringBuffer();
 		for(String id : userIds){
 			String uuid = UUIDUtil.genUUID();
 			map = new HashMap<String, Object>();
@@ -109,17 +115,26 @@ public class SendManagerController {
 			map.put("sendUserinfoId", userId);
 			map.put("contentThemes", problems);
 			map.put("content", content);
-			map.put("sendTime", format.format(date));
+			map.put("sendTime", nowTime);
 			map.put("deleteTime", "");
 			map.put("duStatu", "0");
 			map.put("statu", "0");
+			infojx.append(id+"-"+uuid+";");
 			lmso.add(map);
 		}
+		String infostr = infojx.substring(0, infojx.length()-1);
 		//保存信息
 		int count = iSendContentService.insertContent(lmso);
 		if(count > 0){
 			//发送工作圈，如果发送失败，则重新发送，知道发送成功
 			//TODO 需要传递的参数为ids，和转换过的problems
+			//ids:对应工作圈的接受者用户to
+			//userId对应工作圈的发送人userId
+			//problems对应工作圈的摘要alert
+			//
+			String returnM = sendAuthMessage.sendMessageTo(ids, userId, problems, nowTime, infostr);
+			//解析returnM这个json串，获取到"result":true等信息后就是返回成功，否则发送失败
+			
 		}
 		return count;
 	}

@@ -94,7 +94,7 @@ public class SendContentServiceImpl implements ISendContentService {
 
 	@Override
 	public int getTotalWd(String userId) throws Exception {
-		String sql = "select * from bxwtfk_sendcontent t where t.accept_userinfo_id = '"+userId+"' and t.du_statu = '0'";
+		String sql = "select * from bxwtfk_sendcontent t where 1=1 and t.du_statu = '0' and t.statu = '0' and t.accept_userinfo_id = '"+userId+"'";
 		return ipaginationservice.getDataCount(sql);
 	}
 

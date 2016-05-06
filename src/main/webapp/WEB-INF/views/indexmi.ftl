@@ -49,6 +49,7 @@
         </div>
         <script src="${ctx}/static/lib/requirejs/require.debug.js"></script>
 		<script src="${ctx}/static/js/config.js"></script>
-		<script src="${ctx}/static/js/indexm.js"></script>
+		<script src="${ctx}/static/js/indexmi.js"></script>
+		<script src="${ctx}/static/lib/gzq-cordova/ios/cordova.js"></script>
 	</body>
 </html>

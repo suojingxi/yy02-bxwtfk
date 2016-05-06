@@ -19,7 +19,7 @@
 						<input type="hidden" data-bind="value: userId" />
 						<input type="hidden" data-bind="value: position" />
 						<input type="hidden" data-bind="value: email" />
-						<p><span class="user_name" data-bind="text: name"></span>&nbsp;&nbsp;<span class="user_department" data-bind="text: deptName"></span></p>
+						<p><span class="user_name" data-bind="text: name.length>4?name.substr(0,3)+'...':name"></span>&nbsp;&nbsp;<span class="user_department" data-bind="text: deptName.length>10?deptName.substr(0,9)+'...':deptName"></span></p>
 						<p class="user_mobile"><span data-bind="text: mobile"></span></p>
 					</div>
 					<div id="id1" class="add"><input type="image" src="./static/images/add.gif" data-bind="click:addUser" alt="添加"/></div>

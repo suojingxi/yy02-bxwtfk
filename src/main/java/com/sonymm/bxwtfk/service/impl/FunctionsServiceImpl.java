@@ -18,12 +18,12 @@ public class FunctionsServiceImpl implements IFunctionsService {
 	private IUserinfoService iUserinfoService;
 
 	@Override
-	public List<FunctionsOfUser> getFunctionsByUser(String user_uid)
+	public List<FunctionsOfUser> getFunctionsByUser(String user_uuid)
 			throws Exception {
 		//这里获取登录人员的功能列表
 		//1.判断登录人的是不是管理员,如果不是管理员则获取功能url中公共功能信息，如果是管理员则获取所有
 		List<FunctionsOfUser> fus = new ArrayList<FunctionsOfUser>();
-		Map<String, Object> map = iUserinfoService.getUserinfoById(user_uid);
+		Map<String, Object> map = iUserinfoService.getUserinfoById(user_uuid);
 		FunctionsOfUser fu = new FunctionsOfUser();
 		if(map.get("isadmin").toString().equals("0")){//登录用户是管理员
 			fu.setApp_id("COM_BXWTFK001");

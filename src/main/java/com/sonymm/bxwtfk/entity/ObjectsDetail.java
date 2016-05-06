@@ -11,7 +11,8 @@ import java.io.Serializable;
 public class ObjectsDetail implements Serializable{
 
 	private static final long serialVersionUID = 7783661605477314266L;
-	
+
+	private String user_uuid;
 	private String user_uid;
 	private String user_name;
 	private String user_passw;
@@ -21,6 +22,12 @@ public class ObjectsDetail implements Serializable{
 	private String email;
 	private String isadmin;
 	private String statu;
+	public String getUser_uuid() {
+		return user_uuid;
+	}
+	public void setUser_uuid(String user_uuid) {
+		this.user_uuid = user_uuid;
+	}
 	public String getUser_uid() {
 		return user_uid;
 	}

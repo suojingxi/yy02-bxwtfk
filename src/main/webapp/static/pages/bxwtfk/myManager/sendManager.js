@@ -173,8 +173,8 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 			var name=me.name;
 			var email=me.email;
 			var mobile=me.mobile;
-			var deptName=me.deptName;
-			var position=me.position;
+			var deptName=me.deptName.length>10?me.deptName.substr(0,9)+"...":me.deptName;
+			var position=me.position.length>10?me.position.substr(0,9)+"...":me.position;
 			$("#table_1").append("<div class='table'><div class='one'>" + name + "</div>" +
 					"<div class='two'>"+deptName+"</div><div class='three'>"+position+"</div><div class='four'>"+mobile+"</div>" +
 					"<div class='five'>"+email+"</div><div class='six'>" +

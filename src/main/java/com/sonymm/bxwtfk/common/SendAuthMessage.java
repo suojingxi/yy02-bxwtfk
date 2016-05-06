@@ -1,29 +1,24 @@
 package com.sonymm.bxwtfk.common;
 
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.util.ArrayList;  
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;  
-import java.util.List;  
-import java.util.Map;  
-import java.util.Map.Entry;  
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.codec.Charsets;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.http.HttpEntity;  
-import org.apache.http.HttpResponse;  
-import org.apache.http.NameValuePair;  
-import org.apache.http.client.HttpClient;  
-import org.apache.http.client.entity.UrlEncodedFormEntity;  
-import org.apache.http.client.methods.HttpPost;  
-import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;  
-import org.apache.http.util.EntityUtils;  
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.serializer.CharsetCodec;
 import com.sonymm.bxwtfk.util.GetStringMD5Util;
 
 @Service
@@ -37,24 +32,22 @@ public class SendAuthMessage {
 	
 	
 	
-	//发送消息
-	private static String sendMessageTo(String ids, String problems, String createTime) throws Exception {
+	/**
+	 * @methodName: sendMessageTo
+	 * @Description: 发送信息 ids：接受人员userId串；userId：发送人userId；problems：摘要信息（信息副标题）；createTime：发送的时间
+	 * @author sjx
+	 * @date 2015年4月28日 上午09:09:39
+	 *
+	 */
+	public String sendMessageTo(String ids, String userId, String problems, String createTime, String infoStr) throws Exception {
 		HttpClient httpClient = null;  
 		HttpPost httpPost = null;  
 		
-		httpClient = new DefaultHttpClient();
         httpPost = new HttpPost(url); 
 		String sign="";
 		StringBuilder builder = new StringBuilder();
 		builder.append(from).append(appSecret).append(createTime).append(problems);
 		sign = GetStringMD5Util.getMD5(builder.toString());
-//		List<NameValuePair> params = new ArrayList<>();
-//        params.add(new NameValuePair("sign", sign));
-//        params.add(new NameValuePair("from", from));
-//        params.add(new NameValuePair("to", ids));
-//        params.add(new NameValuePair("appId", appId));
-//        params.add(new NameValuePair("orgId", orgId));
-//        params.add(new NameValuePair("alert", problems));
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("sign", sign);
 		map.put("from", from);
@@ -62,6 +55,13 @@ public class SendAuthMessage {
 		map.put("appId", appId);
 		map.put("orgId", orgId);
 		map.put("alert", problems);
+		map.put("appName", "用友政务");
+		map.put("orgname", "用友政务");
+		map.put("userid", userId);
+		map.put("mtitle", "报销问题反馈");//消息主标题
+		map.put("stitle", problems);//消息副标题
+		map.put("createTime", createTime);
+		map.put("quote", infoStr);
 		String result = "";
 		try{
         	httpClient = new DefaultHttpClient();
@@ -90,12 +90,13 @@ public class SendAuthMessage {
         return result; 
 	}
 	
-	public static void main(String[] args) {
-		try {
-			sendMessageTo("61000240381","拉升的骄傲了了,打发大发发","2016-01-01 00:00:00");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			String str = sendMessageTo("61000240381","拉升的骄傲了了,打发大发发","2016-01-01 00:00:00");
+//			System.out.println(str);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }

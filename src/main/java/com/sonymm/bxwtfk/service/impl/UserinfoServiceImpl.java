@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
@@ -45,6 +46,17 @@ public class UserinfoServiceImpl implements IUserinfoService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map = Convert.bean2map(user);
 		return map;
+	}
+
+	@Override
+	public int checkUserinfo(String userid) throws Exception {
+		String sql = "SELECT * FROM BXWTFK_USERINFO u where u.USERID = '"+userid+"'";
+		try{
+			int count = jdbcTemplate.queryForList(sql).size();
+			return count;
+		}catch (EmptyResultDataAccessException e) {   
+            return 0;   
+        }  
 	}
 	
 	@Override

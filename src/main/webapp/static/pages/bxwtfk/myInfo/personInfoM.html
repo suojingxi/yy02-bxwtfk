@@ -14,11 +14,11 @@
 	    <script src="./static/lib/lib/ratchet/js/ratchet.js"></script>
 	    
   	</head>
-  	<body>
+  	<body id="bodys">
 	    <!-- Make sure all your bars are the first things in your <body> -->
 	   	<header class="bar bar-nav" style="background-color:#00bbd2;">
-		    <a href="javascript:;" onclick="returnInd();" style="color:white;" class="icon icon-left-nav pull-left"></a>
-		    <a href="#delPrompt" class="icon icon-trash pull-right"  style="color:white;"></a>
+		    <a href="javascript:;" onclick="returnInd();"><span style="color:white;" class="pull-left icon icon-left-nav"></span></a>
+		    <a href="#delPrompt"><span class="media-object pull-right icon icon-trash"  style="color:white;"></span></a>
 		    <h1 class="title" style="color:white;">报销信息反馈详情</h1>
 	  	</header>
 	   	<div class="content" style="margin-top:0px;" data-bind="foreach:data.content">

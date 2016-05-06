@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -57,80 +58,149 @@ public class IndexController {
 	@Autowired
 	IUserinfoService iUserinfoService;
 
+	//进入后台，1：判断登录的设备是PC还是移动端
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(ModelMap model, HttpSession session,
 			HttpServletRequest request) throws Exception {
 		Logger logger = Logger.getLogger(IndexController.class);
 		try {
-			ObjectsDetail user = new ObjectsDetail();
-			//通过判断当前登录人是不是管理员（这里管理员写死），如果是，则获取当前登录人所在组织的所有人员。
-			//获取所有企业员工信息
-			String all_auth = getAuth.getAllAuth();
-			Map<String, Object> lmss = convertJson.getMapByJson(all_auth);
-			List<Map<String, Object>> auth_list_map = convertJson.getListByJson(lmss.get("employeeInfo").toString());
-			//获取当前登录工作圈的人员信息
-			//这里通过调用GetAuth类中的方法，获取当前登录人的信息
-			String auth = "[" + getAuth.getAuth() + "]";
-			List<Map<String, Object>> auth_map = convertJson.getListByJson(auth);
-			//判断当前登录人员信息是否为空，如果为空说明是直接访问的当前系统，不允许访问
-			// TODO Auto-generated method stub
+			//判断登录端设备
+			String dev = DeviceUtil.getDevice(request.getHeader("user-agent"));
 			
-			//如果不为空，这判断当前登录人员是否在当前企业员工信息列表中中
-			boolean flag = false;
-			Map<String, Object> save_auth_map = new HashMap<String, Object>();
-			for(Map<String, Object> map : auth_list_map) {
-				if(map.get("userId").equals(auth_map.get(0).get("userId"))){
-					flag = true;
-					save_auth_map = map;
-					break;
-				}
-			}
-			
-			//如果在企业员工列表中，判断是否在数据库表中
-			if(flag){
-				Map<String, Object> userinfo = iUserinfoService.getUserinfo(auth_map.get(0).get("userId").toString());
-				//如果在数据库中（userinfo!=null）则进行下面操作，如果不在则保存到数据库中。
-				Map<String, Object> tran_auth_map = new HashMap<String, Object>();
-				if(userinfo == null){
-					tran_auth_map = iUserinfoService.addUserinfo(save_auth_map);
+			if(dev.equals("ios")) {
+				return "indexmi";
+			} else if(dev.equals("android")) {
+				return "indexma";
+			}else{
+				//如果是pc端，就进行pc端的单点登录
+				Object user = session.getAttribute("userId");
+				if(user==null){
+					String authCode = request.getParameter("auth_code");
+					String authCodeRelRandomKey = request.getParameter("randomkey");
+					if(authCode!=null&&!authCode.equals("")&&authCodeRelRandomKey!=null&&!authCodeRelRandomKey.equals("")){
+						session.setAttribute("auth_code", authCode);
+						session.setAttribute("randomkey", authCodeRelRandomKey);
+					}
+					
+					List<Map<String, Object>> auth_list_map = getAllAuth(authCode, authCodeRelRandomKey);
+					List<Map<String, Object>> auth_map = getAuthnow(authCode, authCodeRelRandomKey);
+					Map<String, Object> save_auth_map = isOrginfo(auth_list_map, auth_map);
+					//如果在企业员工列表中，判断是否在数据库表中
+					if(save_auth_map!=null){
+						Map<String, Object> tran_auth_map = checkInfo(auth_map, save_auth_map);
+						if(tran_auth_map!=null){
+							setSession(tran_auth_map, session);
+							return "index";
+						}else{
+							return "";
+						}
+					}else{
+						return "";
+					}
 				}else{
-					tran_auth_map = userinfo;
+					return "index";
 				}
-				user.setDeptname(tran_auth_map.get("deptname") != null ? tran_auth_map.get("deptname").toString() : "");
-				user.setEmail(tran_auth_map.get("email") != null ? tran_auth_map.get("email").toString() : "");
-				user.setIsadmin(tran_auth_map.get("isadmin") != null ? tran_auth_map.get("isadmin").toString() : "");
-				user.setMobile(tran_auth_map.get("mobile") != null ? tran_auth_map.get("mobile").toString() : "");
-				user.setPosition(tran_auth_map.get("position") != null ? tran_auth_map.get("position").toString() : "");
-				user.setStatu(tran_auth_map.get("statu") != null ? tran_auth_map.get("statu").toString() : "");
-				user.setUser_name(tran_auth_map.get("name") != null ? tran_auth_map.get("name").toString() : "");
-				user.setUser_passw("");
-				user.setUser_uid(tran_auth_map.get("userinfoid") != null ? tran_auth_map.get("userinfoid").toString() : "");
-				
-				ObjectsDetail[] users = {user};
-				
-				session.setAttribute("loginUser", users[0]);
-				session.setAttribute("userName", users[0].getUser_name());
-				session.setAttribute("userId", auth_map.get(0).get("userId").toString());
-				
-				//判断登录端设备
-				String dev = DeviceUtil.getDevice(request.getHeader("user-agent"));
-				
-				if(dev.equals("mobile")) {
-					return "indexm";
-				} else {
-					//TODO
-					return "indexm";
-				}
-			}else{//如果不是企业员工默认为恶意攻击，直接跳出系统
-				return "";
 			}
-			
 		} catch (Exception e) {
 			logger.error(e);
 			throw new Exception(e.getMessage());
 		}
 	}
-
+	
+	//如果是移动设备则进入这个方法，进行单点登录
+	@RequestMapping(value = "dddl", method = RequestMethod.POST)
+	public @ResponseBody String dddl(
+			@RequestParam(value="authCode") String authCode,
+			@RequestParam(value="authCodeRelRandomKey") String authCodeRelRandomKey,
+			HttpServletRequest request,HttpServletResponse response, HttpSession session){
+		Logger logger = Logger.getLogger(IndexController.class);
+		String returns = "0";
+		try{
+			List<Map<String, Object>> auth_list_map = getAllAuth(authCode, authCodeRelRandomKey);
+			List<Map<String, Object>> auth_map = getAuthnow(authCode, authCodeRelRandomKey);
+			Map<String, Object> save_auth_map = isOrginfo(auth_list_map, auth_map);
+			//如果在企业员工列表中，判断是否在数据库表中
+			if(save_auth_map!=null){
+				Map<String, Object> tran_auth_map = checkInfo(auth_map, save_auth_map);
+				if(tran_auth_map!=null){
+					setSession(tran_auth_map, session);
+					returns = "1";
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			e.getMessage();
+		}
+		return returns;
+	}
+	
+	//校验当前登录人员信息是否在本地
+	private Map<String, Object> checkInfo(List<Map<String, Object>> auth_map, Map<String, Object> save_auth_map){
+		//如果在数据库中（userinfo!=null）则进行下面操作，如果不在则保存到数据库中。
+		Map<String, Object> tran_auth_map = null;
+		try {
+			//判断userId有没有在库中
+			int count = iUserinfoService.checkUserinfo(auth_map.get(0).get("userId").toString());
+			tran_auth_map = new HashMap<String, Object>();
+			if(count>0){
+				tran_auth_map = iUserinfoService.getUserinfo(auth_map.get(0).get("userId").toString());
+			}else{
+				tran_auth_map = iUserinfoService.addUserinfo(save_auth_map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tran_auth_map;
+	}
+	
+	//登录成功后设置session
+	private void setSession(Map<String, Object> tran_auth_map, HttpSession session){
+		ObjectsDetail user = new ObjectsDetail();
+		user.setDeptname(tran_auth_map.get("deptname") != null ? tran_auth_map.get("deptname").toString() : "");
+		user.setEmail(tran_auth_map.get("email") != null ? tran_auth_map.get("email").toString() : "");
+		user.setIsadmin(tran_auth_map.get("isadmin") != null ? tran_auth_map.get("isadmin").toString() : "");
+		user.setMobile(tran_auth_map.get("mobile") != null ? tran_auth_map.get("mobile").toString() : "");
+		user.setPosition(tran_auth_map.get("position") != null ? tran_auth_map.get("position").toString() : "");
+		user.setStatu(tran_auth_map.get("statu") != null ? tran_auth_map.get("statu").toString() : "");
+		user.setUser_name(tran_auth_map.get("name") != null ? tran_auth_map.get("name").toString() : "");
+		user.setUser_passw("");
+		user.setUser_uid(tran_auth_map.get("userid") != null ? tran_auth_map.get("userid").toString() : "");
+		user.setUser_uuid(tran_auth_map.get("userinfoid") != null ? tran_auth_map.get("userinfoid").toString() : "");
+		
+		session.setAttribute("loginUser", user);
+		session.setAttribute("userName", user.getUser_name());
+		session.setAttribute("userId", user.getUser_uid());
+	}
+	
+	private List<Map<String, Object>> getAllAuth(String authCode, String authCodeRelRandomKey){
+		//获取所有企业员工信息
+		String all_auth = getAuth.getAllAuthyd(authCode, authCodeRelRandomKey);
+		Map<String, Object> lmss = convertJson.getMapByJson(all_auth);
+		return convertJson.getListByJson(lmss.get("employeeInfo").toString());
+	}
+	
+	private List<Map<String, Object>> getAuthnow(String authCode, String authCodeRelRandomKey){
+		//获取当前登录工作圈的人员信息
+		//这里通过调用GetAuth类中的方法，获取当前登录人的信息
+		String auth = "[" + getAuth.getAuthyd(authCode, authCodeRelRandomKey) + "]";
+		return convertJson.getListByJson(auth);
+	}
+	
+	private Map<String, Object> isOrginfo(List<Map<String, Object>> auth_list_map, List<Map<String, Object>> auth_map){
+		//如果不为空，这判断当前登录人员是否在当前企业员工信息列表中中
+		Map<String, Object> save_auth_map = null;
+		for(Map<String, Object> map : auth_list_map) {
+			if(map.get("userId").equals(auth_map.get(0).get("userId"))){
+				save_auth_map = new HashMap<String, Object>();
+				save_auth_map = map;
+				break;
+			}
+		}
+		
+		return save_auth_map;
+	}
+	
+	
 	/*
 	 * @RequestMapping("/") public String login() { return "index"; }
 	 */
@@ -140,7 +210,7 @@ public class IndexController {
 			throws Exception {
 		ObjectsDetail user = (ObjectsDetail) session.getAttribute("loginUser");
 		// 登录人对应角色的functions
-		List<FunctionsOfUser> funs = iFuns.getFunctionsByUser(user.getUser_uid());
+		List<FunctionsOfUser> funs = iFuns.getFunctionsByUser(user.getUser_uuid());
 		List<FunctionVO> funList = new ArrayList<FunctionVO>();
 		for (FunctionsOfUser fun : funs) {
 			String funCode = fun.getCode_name();
@@ -179,7 +249,7 @@ public class IndexController {
 				"loginUser");
 		      // 登录人对应角色的functions
 	       	  List<FunctionsOfUser> funAuths = iFuns.getFunctionsByUser(user
-					.getUser_uid());
+					.getUser_uuid());
 	       	  for(FunctionsOfUser userAuth:funAuths){
 	       		  authName=userAuth.getCode_name();
 	       		  if("COM_BXWTFK001".equals(authName)){

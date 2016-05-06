@@ -125,6 +125,13 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfoM.html
 		viewModel.load(id);
 	}
 	
+	$("#bodys").onkeydown=function(){
+		if(window.event.keyCode==8){//获取点击返回键的编号
+			returnInd();
+			window.location.reload()
+		}
+	}
+	
 	return {
 		'model' : viewModel,
 		'template' : template,

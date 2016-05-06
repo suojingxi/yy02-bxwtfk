@@ -37,6 +37,7 @@ public class DeviceUtil {
                 "upg1", "upsi", "vk-v", "voda", "wap-", "wapa", "wapi", "wapp",  
                 "wapr", "webc", "winw", "winw", "xda", "xda-",  
                 "Googlebot-Mobile" };
+		String[] ioss = {"ios","iphone","ipad","ipod"};
 		if (userAgent != null && !userAgent.equals("")) {  
             for (String mobileAgent : mobileAgents) {  
                 if (userAgent.toLowerCase()  
@@ -49,7 +50,19 @@ public class DeviceUtil {
         	return null;
         }
 		if(isMobile){
-			return "mobile";
+			boolean isIos = false;
+			for(String ios : ioss){
+				if (userAgent.toLowerCase()  
+                        .indexOf(ios) >= 0) {  
+					isIos = true;  
+                    break;  
+                }  
+			}
+			if(isIos){
+				return "ios";
+			}else{
+				return "android";
+			}
 		}else{
 			return "pc";
 		}
