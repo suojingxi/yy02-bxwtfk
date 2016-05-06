@@ -31,20 +31,7 @@
     	<!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
 		<div class="content">
         	<ul class="table-view" id="tableView">
-				<div class="card">
-          			<li class="table-view-cell">
-            			<a href="#/bxwtfk/myInfo/getPersonInfoNum" data-transition="slide-in" style="padding-right:15px;">
-              				<div class="media-body">
-                				<span>报销信息主题1</span>
-				 				<div class="pull-right" style="border:1px solid #777;font-size:12px;margin:0;padding:0;line-height:15px;height:15px;">已阅</div>
-				 				<div>
-                					<span style="line-height:20px;font-size:12px;">2016年4月22日 16:36:15</span>
-                					<p>现金支出单据可以作为员工、业务员向单位借支现金时使用。</p>
-								</div>
-			  				</div>
-            			</a>
-          			</li>
-		  		</div>
+				
         	</ul>
         </div>
         <script src="${ctx}/static/lib/requirejs/require.debug.js"></script>
