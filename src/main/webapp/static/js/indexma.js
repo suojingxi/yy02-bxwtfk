@@ -24,6 +24,7 @@ require([ 'jquery', 'knockout', 'ujs', 'director','error' ], function($, ko) {
 	window.addRouter(infoUrl);
 	var authCode = "";
 	var authCodeRelRandomKey = "";
+	var ext = "";
 	$(function() {
 		document.addEventListener('deviceready', function() {
 			cordova.exec(
@@ -32,7 +33,32 @@ require([ 'jquery', 'knockout', 'ujs', 'director','error' ], function($, ko) {
 					 authCode=result.data.auth_code;
 					 authCodeRelRandomKey = result.data.authCodeRelRandomKey;
 					 if(authCode!=null&&authCode!=""&&authCodeRelRandomKey!=null&&authCodeRelRandomKey!=""){
-						 	dddl(authCode, authCodeRelRandomKey);
+						 if(sessionStorage.getItem("ext")){
+							 dddl(authCode, authCodeRelRandomKey);
+						 }else{
+							 cordova.exec(
+								function(res) {
+									 result = $.parseJSON(res);
+									 var ext = result.data.ext;
+									 var extObj = $.parseJSON(ext);
+									 if(result.data.ext==null){
+										 dddl(authCode, authCodeRelRandomKey);
+									 }else{
+										 sessionStorage.setItem("ext",true);
+										 dddl1(authCode, authCodeRelRandomKey, extObj.uuids);
+									 }
+								 },
+								 function(res) {
+									 alert("您不是该企业用户,不能进入asdasdfasfa");
+									 return;
+								 },
+								 'Config',    //类名
+								 'getConfig',		//方法名
+								 [{
+								 	"isSecure": 1		//1，安全；0，非安全；默认为0。int型。
+								 }]
+								);
+						 }
 					 }
 				 },
 				 function(res) {
@@ -67,6 +93,35 @@ require([ 'jquery', 'knockout', 'ujs', 'director','error' ], function($, ko) {
 				if(obj=="1"){
 					getXX();
 					getPersonInfo();
+					$('.content').find("a[href*='#']").each(function() {
+						var path = this.hash.replace('#', '');
+						addRouter(path);
+					});
+					window.router.init();
+				}
+			},
+			error : function(obj){
+				alert("由于网络异常，单点登录失败");
+			}
+		});
+	}
+	
+	this.dddl1 = function(authCode, authCodeRelRandomKey, uuids){
+		var authCode = authCode;
+		var authCodeRelRandomKey = authCodeRelRandomKey;
+		var uuids = uuids;
+		$.ajax({
+			type : 'POST',
+			cache : false,
+			url : $ctx + "/dddl",
+			data : {
+				authCode : authCode,
+				authCodeRelRandomKey : authCodeRelRandomKey
+			},
+			dataType : 'json',
+			success : function(obj) {
+				if(obj=="1"){
+					getContentxq(uuids);
 					$('.content').find("a[href*='#']").each(function() {
 						var path = this.hash.replace('#', '');
 						addRouter(path);
@@ -116,6 +171,13 @@ require([ 'jquery', 'knockout', 'ujs', 'director','error' ], function($, ko) {
 	
 	this.getContent = function(e){
 		var id = e.id;
+		var url = "/bxwtfk/myInfo/personInfoM/0?&id="+id;
+		addRouter(url);
+		window.router.setRoute(url);
+	}
+	
+	this.getContentxq = function(e){
+		var id = e;
 		var url = "/bxwtfk/myInfo/personInfoM/0?&id="+id;
 		addRouter(url);
 		window.router.setRoute(url);

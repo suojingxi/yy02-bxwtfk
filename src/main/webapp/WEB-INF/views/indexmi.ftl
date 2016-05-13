@@ -25,7 +25,7 @@
 	<body>
 	    <!-- Make sure all your bars are the first things in your <body> -->
 	    <header class="bar bar-nav" style="background-color:#00bbd2;">
-	  		<a class="icon icon-left-nav pull-left" style="color:white;"></a>
+	  		<!-- <a class="icon icon-left-nav pull-left" style="color:white;"></a> -->
 	  		<h1 class="title pull-center" style="color:white;">我的报销信息反馈（<span id="num"></span>）</h1>
 	    </header>
     	<!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->

@@ -2,6 +2,7 @@ package com.sonymm.bxwtfk.util;
 
 import java.security.MessageDigest;
 
+
 /**
  * @ClassName: GetStringMD5Util
  * @Description: 字符串MD5生成工具類
@@ -10,32 +11,72 @@ import java.security.MessageDigest;
 */
 public class GetStringMD5Util {
 
-	private GetStringMD5Util() {
-        throw new Error("禁止实例化");
-    }
-	public static String getMD5(String str){
-		try {  
-            // 获得MD5摘要算法的 MessageDigest对象  
-            MessageDigest mdInst = MessageDigest.getInstance("MD5");  
-            // 使用指定的字节更新摘要  
-            mdInst.update(str.getBytes());  
-            // 获得密文  
-            byte[] md = mdInst.digest();  
-            // 把密文转换成十六进制的字符串形式  
-            StringBuffer buf = new StringBuffer();  
-            for (int i = 0; i < md.length; i++) {  
-                int tmp = md[i];  
-                if (tmp < 0)  
-                    tmp += 256;  
-                if (tmp < 16)  
-                    buf.append("0");  
-                buf.append(Integer.toHexString(tmp));  
-            }  
-//            return buf.toString().substring(8, 24);// 16位加密  
-            return buf.toString();// 32位加密  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-            return null;  
-        }  
+	final static char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7',
+		'8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	/**
+	 * Encodes a string
+	 * 
+	 * @param str
+	 *            String to encode
+	 * @return Encoded String
+	 */
+	public static String crypt(String str) {
+		return crypt(str, Charsets.UTF8.encoding);
 	}
+	
+	/**
+	 * encode a string with given encoding
+	 * 
+	 * @param str
+	 *            String to encode
+	 * @param charSet
+	 *            encoding
+	 * @return the encode String
+	 */
+	public static String crypt(String str, String charSet) {
+		if (str == null || str.length() == 0 || charSet == null) {
+			throw new IllegalArgumentException(
+					"String or charset to encript cannot be null or zero length");
+		}
+		return getMD5(Charsets.getBytes(str, charSet));
+	}
+	
+	public static String getMD5(byte[] source) {
+		return crypt(source);
+	}
+	
+	/**
+	 * encode bytes
+	 * 
+	 * @param source
+	 *            source bytes
+	 * @return the encode String
+	 */
+	public static String crypt(byte[] source) {
+		String s = null;
+	
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(source);
+			byte tmp[] = md.digest();
+			char str[] = new char[16 * 2];
+			int k = 0;
+			for (int i = 0; i < 16; i++) {
+				byte byte0 = tmp[i];
+				str[k++] = hexDigits[byte0 >>> 4 & 0xf];
+	
+				str[k++] = hexDigits[byte0 & 0xf];
+			}
+			s = new String(str);
+	
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
+		return s;
+	}
+	
+//	public static void main(String[] args) {
+//	    System.out.println(GetStringMD5Util.crypt("5000000102211695395800678458941462944795078单据填写问题"));
+//	  }
 }

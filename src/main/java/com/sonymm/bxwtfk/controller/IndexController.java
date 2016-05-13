@@ -1,5 +1,6 @@
 package com.sonymm.bxwtfk.controller;
 
+import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,7 @@ public class IndexController {
 	//进入后台，1：判断登录的设备是PC还是移动端
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(ModelMap model, HttpSession session,
-			HttpServletRequest request) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Logger logger = Logger.getLogger(IndexController.class);
 		try {
 			//判断登录端设备
@@ -80,8 +81,15 @@ public class IndexController {
 					if(authCode!=null&&!authCode.equals("")&&authCodeRelRandomKey!=null&&!authCodeRelRandomKey.equals("")){
 						session.setAttribute("auth_code", authCode);
 						session.setAttribute("randomkey", authCodeRelRandomKey);
+					}else{
+						String urlHttps = request.getParameter("urlHttps");
+						urlHttps = java.net.URLEncoder.encode(urlHttps, "UTF-8");
+						//
+						String str = "https://gzq.chanjet.com/app/web/authCodeRedirect?orgId=90004164972&appType=zhengwu&url="+urlHttps;
+//						response.sendRedirect("http://gzqmoni.chanjet.com/app/web/authCodeRedirect?orgId=90004164972&appType=zhengwu&url="+urlHttps);
+						response.sendRedirect(str);
+						return null;
 					}
-					
 					List<Map<String, Object>> auth_list_map = getAllAuth(authCode, authCodeRelRandomKey);
 					List<Map<String, Object>> auth_map = getAuthnow(authCode, authCodeRelRandomKey);
 					Map<String, Object> save_auth_map = isOrginfo(auth_list_map, auth_map);
@@ -90,7 +98,15 @@ public class IndexController {
 						Map<String, Object> tran_auth_map = checkInfo(auth_map, save_auth_map);
 						if(tran_auth_map!=null){
 							setSession(tran_auth_map, session);
-							return "index";
+							String urlBack = request.getParameter("url");
+							if(urlBack == null){
+								return "index";
+							}else{
+								urlBack = urlBack.replace("jinghao","#");
+								//urlBack = java.net.URLDecoder.decode(urlBack, "UTF-8");
+								response.sendRedirect(urlBack);
+								return null;
+							}
 						}else{
 							return "";
 						}
@@ -166,7 +182,6 @@ public class IndexController {
 		user.setUser_passw("");
 		user.setUser_uid(tran_auth_map.get("userid") != null ? tran_auth_map.get("userid").toString() : "");
 		user.setUser_uuid(tran_auth_map.get("userinfoid") != null ? tran_auth_map.get("userinfoid").toString() : "");
-		
 		session.setAttribute("loginUser", user);
 		session.setAttribute("userName", user.getUser_name());
 		session.setAttribute("userId", user.getUser_uid());

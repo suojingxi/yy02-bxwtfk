@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sonymm.bxwtfk.common.GetAuth;
 import com.sonymm.bxwtfk.common.SendAuthMessage;
 import com.sonymm.bxwtfk.service.ISendContentService;
+import com.sonymm.bxwtfk.service.IWtdjTypeService;
 import com.sonymm.bxwtfk.util.ConvertJson;
 import com.sonymm.bxwtfk.util.UUIDUtil;
 
@@ -46,6 +47,9 @@ public class SendManagerController {
 	
 	@Autowired
 	SendAuthMessage sendAuthMessage;
+	
+	@Autowired
+	IWtdjTypeService iWtdjTypeService;
 	
 	@RequestMapping(value = "/myManager/getAllUser", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> getAllUser(
@@ -106,11 +110,16 @@ public class SendManagerController {
 		Date date=new Date();
 		DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String nowTime = format.format(date);
-		StringBuffer infojx = new StringBuffer();
+//		long longTime = date.getTime();
+		long longTime = System.currentTimeMillis();
+		Map<String, String> infojx = new HashMap<String, String>();
+		List<String> uuids = new ArrayList<String>();
 		for(String id : userIds){
 			String uuid = UUIDUtil.genUUID();
+			uuids.add(uuid);
 			map = new HashMap<String, Object>();
 			map.put("id", uuid);
+			//TODO
 			map.put("acceptUserinfoId", id);
 			map.put("sendUserinfoId", userId);
 			map.put("contentThemes", problems);
@@ -119,10 +128,9 @@ public class SendManagerController {
 			map.put("deleteTime", "");
 			map.put("duStatu", "0");
 			map.put("statu", "0");
-			infojx.append(id+"-"+uuid+";");
+			infojx.put(id, uuid);
 			lmso.add(map);
 		}
-		String infostr = infojx.substring(0, infojx.length()-1);
 		//保存信息
 		int count = iSendContentService.insertContent(lmso);
 		if(count > 0){
@@ -132,9 +140,28 @@ public class SendManagerController {
 			//userId对应工作圈的发送人userId
 			//problems对应工作圈的摘要alert
 			//
-			String returnM = sendAuthMessage.sendMessageTo(ids, userId, problems, nowTime, infostr);
+			//处理参数problems将编码转换成对应文字
+			String typeNames = iWtdjTypeService.getNamesByCodes(problems);
+			String returnM = sendAuthMessage.sendMessageTo(ids, userId, typeNames, longTime+"", infojx);
 			//解析returnM这个json串，获取到"result":true等信息后就是返回成功，否则发送失败
-			
+			returnM = "[" + returnM + "]";
+			List<Map<String, Object>> result = convertJson.getListByJson(returnM);
+			boolean resultFlag = false;
+			for(Map<String, Object> mso : result){
+				if(mso.containsKey("result")){
+					if(mso.get("result").toString().equals("true")){
+						resultFlag = true;
+						break;
+					}
+				}
+			}
+			if(!resultFlag){
+				count = -1;
+				//删除已经插入的信息
+				for(String strUuid : uuids){
+					iSendContentService.delSendContentById(strUuid);
+				}
+			}
 		}
 		return count;
 	}

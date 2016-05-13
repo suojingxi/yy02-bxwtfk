@@ -305,6 +305,10 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 					$("#errorinfo").html("发布信息成功");
 				    $('#errorinfoModel').modal(); 
 					removeall();
+				}else{
+					$("#errorts").html("信息提示");
+					$("#errorinfo").html("由于网络原因，发布信息失败");
+				    $('#errorinfoModel').modal(); 
 				}
 			},
 			error : function(obj){

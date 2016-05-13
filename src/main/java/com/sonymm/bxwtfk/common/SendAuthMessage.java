@@ -1,6 +1,7 @@
 package com.sonymm.bxwtfk.common;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.codec.Charsets;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -25,10 +27,13 @@ public class SendAuthMessage {
 
 	private static String from = "50000001022";
 	private static String appId = "23";
-	private static String orgId = "90000997922";//90004164972
-//	private static String orgId = "90004164972";
-	private static String appSecret = "1167715352166405154";
-	private static String url = "http://integzq.chanjet.com/notify/web/openim/push";
+//	private static String orgid = "90000997922";//90004164972
+	private static String orgid = "90004164972";
+//	private static String appSecret = "1167715352166405154";//1169539580067845894
+	private static String appSecret = "1169539580067845894";
+//	private static String url = "http://integzq.chanjet.com/notify/web/openim/push";
+//	private static String url = "https://gzqmoni.chanjet.com/notify/web/openim/push";
+	private static String url = "https://gzq.chanjet.com/notify/web/openim/push";
 	
 	
 	
@@ -47,12 +52,12 @@ public class SendAuthMessage {
 		String sign="";
 		StringBuilder builder = new StringBuilder();
 		builder.append(from).append(appSecret).append(createTime).append(problems);
-		sign = com.sonymm.bxwtfk.util.GetStringMD5Util.getMD5(builder.toString());
-		Map<String, String> map = new HashMap<String, String>();
+		sign = com.sonymm.bxwtfk.util.GetStringMD5Util.crypt(builder.toString());
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sign", sign);
 		map.put("from", from);
 		map.put("appId", appId);
-		map.put("orgId", orgId);
+		map.put("orgid", orgid);
 		map.put("alert", problems);
 		map.put("appName", "报销反馈");
 		map.put("orgname", "报销反馈");
@@ -60,6 +65,7 @@ public class SendAuthMessage {
 		map.put("mtitle", "报销问题反馈");//消息主标题
 		map.put("stitle", problems);//消息副标题
 		map.put("createTime", createTime);
+		map.put("resId", "0");
 		String result = "";
 		try{
         	httpClient = new DefaultHttpClient();
@@ -68,20 +74,23 @@ public class SendAuthMessage {
             List<NameValuePair> list = new ArrayList<NameValuePair>();  
             Iterator iterator = null;
             
-            String[] idarray = ids.split("[,]");
+            String[] idarray = ids.split(",");
             for (int i = 0; i < idarray.length; i++) {
             	map.put("to", idarray[i]);
-            	map.put("quto", getURLByUserID(idarray[i], infoStr));
+            	net.sf.json.JSONObject exts = new net.sf.json.JSONObject();
+            	exts.put("url", getURLByUserID(idarray[i], infoStr));
+            	exts.put("uuids", infoStr.get(idarray[i]));
+            	map.put("ext", exts);
             	iterator = map.entrySet().iterator(); 
             	 while(iterator.hasNext()){  
-                     Entry<String,String> elem = (Entry<String, String>) iterator.next();  
-                     list.add(new BasicNameValuePair(elem.getKey(),elem.getValue()));  
+                     Entry<String,Object> elem = (Entry<String, Object>) iterator.next();  
+                     list.add(new BasicNameValuePair(elem.getKey(),elem.getValue().toString()));  
                  } 
             	 if(list.size() > 0){  
                      UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list,Charsets.UTF_8);  
                      httpPost.setEntity(entity);  
                  }  
-                 HttpResponse response = httpClient.execute(httpPost);  
+                 HttpResponse response = httpClient.execute(httpPost);
                  if(response != null){  
                      HttpEntity resEntity = response.getEntity();  
                      if(resEntity != null){  
@@ -97,15 +106,31 @@ public class SendAuthMessage {
 	}
 	
 	private String getURLByUserID(String userId, Map<String, String> map) {
-		String url = "http://10.10.5.4/yy02-bxwtfk/#/bxwtfk/myInfo/personInfo?id="+map.get(userId).toString();
+		String url = "http://125.35.5.61:80/yy02-bxwtfk/jinghao/bxwtfk/myInfo/personInfo?id="+map.get(userId).toString();
 		try {
 			url = java.net.URLEncoder.encode(url, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String urlString = "http://10.10.5.4/yy02-bxwtfk?url="+url;
-		return url;
+		String urlString = "http://125.35.5.61:80/yy02-bxwtfk?urlHttps="+url;
+		return urlString;
+	}
+	
+	public long convert2long(String date, String format) {
+		try {
+			if (StringUtils.isNotBlank(date)) {
+				if (StringUtils.isBlank(format)){
+					format = "yyyy-MM-dd HH:mm:ss";
+				}
+				SimpleDateFormat sf = new SimpleDateFormat(format);
+				return sf.parse(date).getTime();
+			}
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0l;
 	}
 	
 //	public static void main(String[] args) {

@@ -36,7 +36,7 @@ public class SendContentServiceImpl implements ISendContentService {
 	@Override
 	public List<Map<String, Object>> getSendContentById(String id)
 			throws Exception {
-		String sql = "SELECT * FROM BXWTFK_SENDCONTENT s where 1 = 1 and s.ID = '" + id + "'";
+		String sql = "SELECT * FROM BXWTFK_SENDCONTENT s where 1 = 1 and s.STATU = '0' and s.ID = '" + id + "'";
 		return jdbcTemplate.queryForList(sql);
 	}
 

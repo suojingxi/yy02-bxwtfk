@@ -18,8 +18,8 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 		var href = window.location.href;
 		var hrefs = href.split('?');
 		if(hrefs.length>1){
-			if(hrefs[1].length<40){
-				var id = hrefs[1].substr(3,hrefs[1].length);
+			if(hrefs[1].indexOf('id=')==0){
+				var id = hrefs[1].substr(3, 35);
 				showmyInfoById(id);
 				return;
 			}
@@ -40,6 +40,7 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 			    $('#errorinfoModel').modal(); 
 			}
 		});
+		
 	}
 	
 	this.delcfm = function(e){
@@ -83,6 +84,10 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 	
 	this.showmyInfoById = function(e){
 		var id = e;
+		var me = this;
+//		var href = window.location.href;
+//		var hrefs = href.split('?');
+//		window.location.href = hrefs[0]+"#/bxwtfk/myInfo/personInfo?"+hrefs[1].split('&')[0];
 		$.ajax({
 			type : 'GET',
 			cache : false,
@@ -106,7 +111,7 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 			},
 			error : function(obj){
 				$("#errorts").html("信息提示");
-				$("#errorinfo").html("由于网络原因，获取当前信息失败");
+				$("#errorinfo").html("由于网络原因，获取当前信息 失 败");
 			    $('#errorinfoModel').modal(); 
 			}
 		});
@@ -173,7 +178,7 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myInfo/personInfo.html'
 		$("#"+id).remove();
 		$("#divwdxx").show();
 		if(window.location.href.indexOf("?")>-1){
-			window.location.href = window.location.href.split('?')[0]+"#"+pageUrl;
+			window.location.href = window.location.href.split('?')[0];
 		}
 		init();
 	}
