@@ -189,6 +189,12 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 	    $("#"+temp).parent().parent().remove();
 	}
 	
+	this.removetr1 = function(e){
+		var id=e;
+		window.map.remove(id);
+	    $("#add"+id).parent().parent().remove();
+	}
+	
 	//操作问题类型选择信息
 	window.problem = new HashMap();
 	this.showmod = function(e){
@@ -272,7 +278,7 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 			return;
 		}
 		var content = $("#fbcontent").val();
-		if(content.length > 100){
+		if(content.length > 300){
 			$("#errorts").html("信息提示");
 			$("#errorinfo").html("您输入的信息太多，请精简内容");
 		    $('#errorinfoModel').modal(); 
@@ -288,7 +294,6 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 			problems += arrp[i] + ",";
 		}
 		problems = problems.substring(0,problems.length-1);
-		
 		$.ajax({
 			type : 'POST',
 			cache : false,
@@ -298,17 +303,28 @@ define([ 'jquery', 'knockout', 'text!static/pages/bxwtfk/myManager/sendManager.h
 				problems : problems,
 				content : content
 			},
-			dataType : 'json',
+			dataType : 'text',
 			success : function(obj) {
-				if(obj > 0){
-					$("#errorts").html("信息提示");
-					$("#errorinfo").html("发布信息成功");
-				    $('#errorinfoModel').modal(); 
-					removeall();
-				}else{
+				var strb = obj;
+				if(strb==""){
 					$("#errorts").html("信息提示");
 					$("#errorinfo").html("由于网络原因，发布信息失败");
 				    $('#errorinfoModel').modal(); 
+				}else{
+					var str = strb.split(",");
+					if(str.length==arri.length){
+						$("#errorts").html("信息提示");
+						$("#errorinfo").html("发布信息成功");
+					    $('#errorinfoModel').modal(); 
+					    removeall();
+					}else{
+						$("#errorts").html("信息提示");
+						$("#errorinfo").html("由于网络原因，部分信息发布失败，请继续重发");
+					    $('#errorinfoModel').modal(); 
+					    for(var i=0; i<str.length; i++){
+					    	removetr1(str[i]);
+					    }
+					}
 				}
 			},
 			error : function(obj){

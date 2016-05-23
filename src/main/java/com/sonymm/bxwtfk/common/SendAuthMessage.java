@@ -20,7 +20,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.sonymm.bxwtfk.util.ConvertJson;
 
 @Service
 public class SendAuthMessage {
@@ -35,11 +38,15 @@ public class SendAuthMessage {
 //	private static String url = "https://gzqmoni.chanjet.com/notify/web/openim/push";
 	private static String url = "https://gzq.chanjet.com/notify/web/openim/push";
 	
+	@Autowired
+	ConvertJson convertJson;
+	
 	
 	
 	/**
 	 * @methodName: sendMessageTo
 	 * @Description: 发送信息 ids：接受人员userId串；userId：发送人userId；problems：摘要信息（信息副标题）；createTime：发送的时间
+	 * @return 返回 字符串：返回已发送成功的userId串。
 	 * @author sjx
 	 * @date 2015年4月28日 上午09:09:39
 	 *
@@ -49,12 +56,9 @@ public class SendAuthMessage {
 		HttpPost httpPost = null;  
 		
         httpPost = new HttpPost(url); 
-		String sign="";
-		StringBuilder builder = new StringBuilder();
-		builder.append(from).append(appSecret).append(createTime).append(problems);
-		sign = com.sonymm.bxwtfk.util.GetStringMD5Util.crypt(builder.toString());
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("sign", sign);
+		
 		map.put("from", from);
 		map.put("appId", appId);
 		map.put("orgid", orgid);
@@ -64,24 +68,33 @@ public class SendAuthMessage {
 		map.put("userid", userId);
 		map.put("mtitle", "报销问题反馈");//消息主标题
 		map.put("stitle", problems);//消息副标题
-		map.put("createTime", createTime);
+		
 		map.put("resId", "0");
 		String result = "";
+        //定义发送成功的人的userId串
+        StringBuffer successUserId = new StringBuffer();
 		try{
         	httpClient = new DefaultHttpClient();
             httpPost = new HttpPost(url);  
-            //设置参数  
-            List<NameValuePair> list = new ArrayList<NameValuePair>();  
+             
             Iterator iterator = null;
-            
             String[] idarray = ids.split(",");
             for (int i = 0; i < idarray.length; i++) {
+            	long longTime = System.currentTimeMillis();
+            	map.put("createTime", longTime);
+            	String sign="";
+        		StringBuilder builder = new StringBuilder();
+        		builder.append(from).append(appSecret).append(longTime).append(problems);
+        		sign = com.sonymm.bxwtfk.util.GetStringMD5Util.crypt(builder.toString());
+        		map.put("sign", sign);
             	map.put("to", idarray[i]);
             	net.sf.json.JSONObject exts = new net.sf.json.JSONObject();
             	exts.put("url", getURLByUserID(idarray[i], infoStr));
             	exts.put("uuids", infoStr.get(idarray[i]));
             	map.put("ext", exts);
             	iterator = map.entrySet().iterator(); 
+            	//设置参数  
+                List<NameValuePair> list = new ArrayList<NameValuePair>(); 
             	 while(iterator.hasNext()){  
                      Entry<String,Object> elem = (Entry<String, Object>) iterator.next();  
                      list.add(new BasicNameValuePair(elem.getKey(),elem.getValue().toString()));  
@@ -97,12 +110,34 @@ public class SendAuthMessage {
                          result = EntityUtils.toString(resEntity,Charsets.UTF_8);  
                      }  
                  }
+                 //解析result这个json串，获取到"result":true等信息后就是返回成功，否则发送失败
+     			if(result.indexOf("true")>-1){
+     				result = "[" + result + "]";
+     				List<Map<String, Object>> resultMap = convertJson.getListByJson(result);
+     				//判断result返回的代码是不是成功代码，如果是，则successUserId添加，如果不是则发送下一条
+                    boolean resultFlag = false;
+     				for(Map<String, Object> mso : resultMap){
+     					if(mso.containsKey("result")){
+     						if(mso.get("result").toString().equals("true")){
+     							resultFlag = true;
+     							break;
+     						}
+     					}
+     				}
+     				if(resultFlag){
+     					successUserId.append(idarray[i]+",");
+     				}
+     			}
 			}
              
         }catch(Exception ex){  
             ex.printStackTrace();  
         }  
-        return result; 
+		if(successUserId.length()>0){
+			return successUserId.substring(0, successUserId.length()-1);
+		}else{
+			return "";
+		}
 	}
 	
 	private String getURLByUserID(String userId, Map<String, String> map) {

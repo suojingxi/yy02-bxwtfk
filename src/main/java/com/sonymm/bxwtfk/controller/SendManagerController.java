@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sonymm.bxwtfk.common.GetAuth;
 import com.sonymm.bxwtfk.common.SendAuthMessage;
 import com.sonymm.bxwtfk.service.ISendContentService;
+import com.sonymm.bxwtfk.service.IUserinfoService;
 import com.sonymm.bxwtfk.service.IWtdjTypeService;
 import com.sonymm.bxwtfk.util.ConvertJson;
 import com.sonymm.bxwtfk.util.UUIDUtil;
@@ -97,7 +98,7 @@ public class SendManagerController {
 	}
 	
 	@RequestMapping(value = "/myManager/sendManager", method = RequestMethod.POST)
-    public @ResponseBody int sendManager(
+    public @ResponseBody String sendManager(
     		@RequestParam(value="ids") String ids,//传过来的是userId串
     		@RequestParam(value="problems") String problems,
     		@RequestParam(value="content") String content,
@@ -105,6 +106,7 @@ public class SendManagerController {
 		String userId = session.getAttribute("userId").toString();
 		List<Map<String, Object>> lmso = new ArrayList<Map<String,Object>>();
 		Map<String, Object> map = null;
+		StringBuffer returnMap = new StringBuffer();
 		//解析传过来的参数
 		String[] userIds = ids.split(",");
 		Date date=new Date();
@@ -142,27 +144,23 @@ public class SendManagerController {
 			//
 			//处理参数problems将编码转换成对应文字
 			String typeNames = iWtdjTypeService.getNamesByCodes(problems);
-			String returnM = sendAuthMessage.sendMessageTo(ids, userId, typeNames, longTime+"", infojx);
-			//解析returnM这个json串，获取到"result":true等信息后就是返回成功，否则发送失败
-			returnM = "[" + returnM + "]";
-			List<Map<String, Object>> result = convertJson.getListByJson(returnM);
-			boolean resultFlag = false;
-			for(Map<String, Object> mso : result){
-				if(mso.containsKey("result")){
-					if(mso.get("result").toString().equals("true")){
-						resultFlag = true;
-						break;
-					}
+			String returnUserIds = sendAuthMessage.sendMessageTo(ids, userId, typeNames, longTime+"", infojx);
+			String[] returnUserIdArray = returnUserIds.split(",");
+			for(String returnUserId : returnUserIdArray){
+				if(!returnUserId.equals("")&&infojx.containsKey(returnUserId)){
+					returnMap.append(returnUserId+",");
+					infojx.remove(returnUserId);
 				}
 			}
-			if(!resultFlag){
-				count = -1;
-				//删除已经插入的信息
-				for(String strUuid : uuids){
-					iSendContentService.delSendContentById(strUuid);
-				}
+			//找出未发送成功的，在本地库删除
+			for(String key : infojx.keySet()){
+				iSendContentService.delSendContentById(infojx.get(key));
 			}
 		}
-		return count;
+		if(returnMap.length()>0){
+			return returnMap.substring(0,returnMap.length()-1);
+		}else{
+			return "";
+		}
 	}
 }

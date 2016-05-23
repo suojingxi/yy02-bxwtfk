@@ -99,6 +99,7 @@ public class IndexController {
 						if(tran_auth_map!=null){
 							setSession(tran_auth_map, session);
 							String urlBack = request.getParameter("url");
+							System.out.println(urlBack);
 							if(urlBack == null){
 								return "index";
 							}else{

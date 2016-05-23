@@ -17,8 +17,8 @@
 		<div class="main">
 			<div class="left">
 				<ul class="sub-menu list-group" style="width:100%;" >
-					<li style="display:none;" class="active list-group-item" id="wdxx" onclick="javascript:show(this)"><span class="badge" id="num"></span><a href="#/bxwtfk/myInfo/personInfo">我的信息</a></li>
-					<li style="display:none;" class="list-group-item"  id="gl" onclick="javascript:show(this)"><a href="#/bxwtfk/myManager/sendManager">管理</a></li>
+					<li style="display:none;" class="active list-group-item" id="wdxx" onclick="javascript:show(this)"><span class="badge" id="num"></span><a style="display: block;width: 100%;height: 20px;text-decoration: none;" href="#/bxwtfk/myInfo/personInfo">我的信息</a></li>
+					<li style="display:none;" class="list-group-item"  id="gl" onclick="javascript:show(this)"><a style="display: block;width: 100%;height: 20px;text-decoration: none;" href="#/bxwtfk/myManager/sendManager">管理</a></li>
 				</ul>
 			</div>
 			<div class="content"></div>

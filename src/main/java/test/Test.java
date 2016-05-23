@@ -2,6 +2,7 @@ package test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;  
+import java.util.HashMap;
 import java.util.Iterator;  
 import java.util.List;  
 import java.util.Map;  
@@ -30,9 +31,13 @@ public class Test {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		String str = "jhgfdsaaaadfadffda";
-		str = str.replace("aaaa", "#");
-		System.out.println(str);
+//		String str = "jhgfdsaaaadfadffda";
+//		str = str.replace("aaaa", "#");
+//		System.out.println(str);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("a", "aaaaa");
+		map.put("a", "bbbbb");
+		System.out.println(map);
 	}
     
 }  
