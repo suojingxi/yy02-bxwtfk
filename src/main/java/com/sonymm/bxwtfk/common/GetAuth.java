@@ -40,8 +40,7 @@ public class GetAuth {
 	private  static  String appSecret ="oncihv";
 	private  static  String clientId ="ed6335f5-061f-43dd-af30-db23904466ee";
 	private  static  String clientSecret ="oncihv";
-	private  static  String auth_username ="xuejx@yonyou.com";
-	private  static  String password = "482c811da5d5b4bc6d497ffa98491e38";
+	
 	public static String accessTokenyd="";
 
 //	public static void main(String[] args) throws Exception {
